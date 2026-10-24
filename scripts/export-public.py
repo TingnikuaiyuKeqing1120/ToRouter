@@ -62,6 +62,8 @@ def export(dest_dir: Path):
         if existing:
             print(f"Warning: Destination {dest_dir} contains {len(existing)} items. Cleaning...")
             for item in existing:
+                if item.name == ".git":
+                    continue
                 if item.is_dir():
                     shutil.rmtree(item)
                 else:

@@ -1,18 +1,27 @@
-# ToRouter
+<div align="center">
+  <h1>ToRouter</h1>
+  <img src="docs/assets/readme/app-icon.png" width="108" height="108" alt="ToRouter Logo" />
+  <p><strong>面向个人的本地模型路由网关，统一管理模型接入、智能路由与用量支出。</strong></p>
 
-<p align="center">
-  <strong>面向个人的本地模型路由网关，统一管理模型接入、智能路由与用量支出。</strong>
-</p>
+  <p>
+    <a href="https://github.com/TingnikuaiyuKeqing1120/ToRouter/releases/latest"><img src="https://img.shields.io/github/v/release/TingnikuaiyuKeqing1120/ToRouter?color=blue&label=Release" alt="Release"></a>
+    <img src="https://img.shields.io/badge/Platform-Windows%20x64-lightgrey" alt="Platform">
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green" alt="License"></a>
+    <img src="https://img.shields.io/badge/MCP-Native%20Support-blueviolet" alt="MCP">
+    <img src="https://img.shields.io/badge/Local--First-Single%20EXE-orange" alt="Local First">
+  </p>
 
-<p align="center">
-  <a href="#为什么做-torouter解耦与克制的设计理念">开发背景</a> •
-  <a href="#核心亮点">核心亮点</a> •
-  <a href="#快速开始">快速开始</a> •
-  <a href="#核心场景">核心场景</a> •
-  <a href="#常见问题与排查">常见问题</a> •
-  <a href="#从源码构建">开发者构建</a> •
-  <a href="#开源许可与致谢">许可与致谢</a>
-</p>
+  <p>
+    <a href="#为什么做-torouter解耦与克制的设计理念">开发背景</a> •
+    <a href="#核心亮点">核心亮点</a> •
+    <a href="#兼容客户端与生态">兼容生态</a> •
+    <a href="#快速开始">快速开始</a> •
+    <a href="#核心场景">核心场景</a> •
+    <a href="#常见问题与排查">常见问题</a> •
+    <a href="#从源码构建">开发者构建</a> •
+    <a href="#开源许可与致谢">许可与致谢</a>
+  </p>
+</div>
 
 ---
 
@@ -66,11 +75,24 @@ ToRouter 是一个专为个人开发者与 AI 高频使用者设计的本地模�
 
 ---
 
+## 兼容客户端与生态
+
+ToRouter 遵循严格的开放模型协议标准，无需私有 SDK，可作为各类 AI 开发工具与桌面客户端的统一驱动中心：
+
+| 客户端类别 | 典型兼容工具 | 接入说明与场景 |
+|---|---|---|
+| **AI Coding Agents** | **Claude Code**、**Codex CLI**、**Cursor**、**GitHub Copilot**、**Aider**、**Devin** | 统一标准代理端点与鉴权，配合内置 MCP 甚至可让 Agent 自主代配置路由与查询渠道 |
+| **桌面客户端与工作台** | **Cherry Studio**、**Chatbox**、**NextChat**、**LibreChat**、**LobeChat** | 填入 `http://127.0.0.1:17878/v1` 及 Client Key，一键拉取所有虚拟公开模型 |
+| **应用编排与工作流** | **Dify**、**FastGPT**、**LangChain**、**LlamaIndex** | 自动故障重试与降级，保障长流程自动化不因单个上游 5xx / 限流而中断 |
+| **原生生态协同** | **MMA（Manage My Agent，规划中）** | 原生与 ToRouter 深度集成，提供更加轻快高效的 Agent 配置与生态管理 |
+
+---
+
 ## 快速开始
 
 无需安装外部依赖或配置数据库，开箱即用：
 
-1. **下载程序**：从 [GitHub Releases](https://github.com/TingnikuaiyuKeqing1120/to-router/releases) 下载最新的 `ToRouter.exe`。
+1. **下载程序**：从 [GitHub Releases](https://github.com/TingnikuaiyuKeqing1120/ToRouter/releases) 下载最新的 `ToRouter.exe`。
 2. **启动网关**：双击运行 `ToRouter.exe`。程序会常驻系统托盘，并自动在浏览器中打开 Web 管理控制台（默认地址：`http://127.0.0.1:17878`）。
 3. **添加上游渠道**：在「上游接入」中添加你的供应商凭证（OpenAI、Anthropic、Gemini、DeepSeek 或兼容反代服务），勾选测试可用的模型。
 4. **配置公开模型**：在「公开模型」中创建一个对外模型名称（例如 `default-reasoning`），并将其绑定到刚刚添加的上游模型；如有需要，可添加备用渠道作为第二优先级回退路线。
@@ -163,8 +185,8 @@ ToRouter 采用单 EXE 多子系统集成：
 ### 构建命令
 ```powershell
 # 1. 克隆代码仓库
-git clone https://github.com/TingnikuaiyuKeqing1120/to-router.git
-cd to-router
+git clone https://github.com/TingnikuaiyuKeqing1120/ToRouter.git
+cd ToRouter
 
 # 2. 一键编译完整单 EXE（含前端打包、第三方许可校验与资源嵌入）
 .\build.ps1
@@ -196,7 +218,7 @@ python .\scripts\check-third-party.py --check
 * **个人用户优先**：拒绝臃肿的企业级分权与繁复概念，以最直白、顺手的交互满足个人模型路由的完整生命周期。
 * **Simple is more**：常用路径直接可达，高级功能与协议微调折叠在抽屉与高级设置中。
 * **反馈与交流**：
-  * 欢迎在 [GitHub Issues](https://github.com/TingnikuaiyuKeqing1120/to-router/issues) 提交 Bug 报告、体验建议或新协议接入诉求。
+  * 欢迎在 [GitHub Issues](https://github.com/TingnikuaiyuKeqing1120/ToRouter/issues) 提交 Bug 报告、体验建议或新协议接入诉求。
   * 提交日志或截图反馈前，请务必注意**脱敏**个人的真实 API Key、自定义账号名或私有凭证。
 
 ---
