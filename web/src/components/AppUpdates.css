@@ -1,0 +1,23 @@
+.app-update-arrow-slot { display: inline-flex; vertical-align: middle; width: 28px; height: 28px; flex-shrink: 0; margin-left: 3px; }
+.app-update-arrow { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 7px; color: var(--brand-blue); background: color-mix(in srgb, var(--brand-blue) 12%, transparent); }
+.app-update-arrow:hover { background: color-mix(in srgb, var(--brand-blue) 22%, transparent); }
+.app-update-arrow:focus-visible { outline: 2px solid var(--brand-blue); outline-offset: 2px; }
+.app-update-panel { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; padding: 18px 20px; }
+.app-update-about { display: flex; align-items: center; gap: 10px; }
+.app-update-about > svg { color: var(--brand-blue); }
+.app-update-about h2 { font-size: 14px; font-weight: 600; }
+.app-update-about p, .app-update-panel-status { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+.app-update-panel-status { flex: 1; min-width: 140px; overflow-wrap: anywhere; }
+.app-update-panel-status [role="alert"] { color: var(--color-danger); }
+.app-update-panel-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.app-update-content { display: grid; gap: 16px; min-width: 0; }
+.app-update-versions { display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 13px; overflow-wrap: anywhere; }
+.app-update-versions strong { margin-left: 6px; }
+.app-update-status, .app-update-hint { font-size: 13px; color: var(--color-text-secondary); line-height: 1.7; }
+.app-update-result { display: grid; gap: 5px; margin-top: 8px; padding: 10px 12px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface-2); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; color: var(--color-text-secondary); }
+.app-update-result-summary { font-weight: 500; color: var(--color-text-primary); }
+.app-update-notes { display: grid; gap: 10px; padding: 16px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface-2); }
+.app-update-notes h3 { font-size: 13px; font-weight: 600; }
+.app-update-notes p { max-height: 320px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; font-size: 13px; line-height: 1.8; color: var(--color-text-secondary); }
+.app-update-actions { flex-wrap: wrap; }
+@media (max-width: 480px) { .app-update-panel { gap: 12px; padding: 16px; } .app-update-panel-status { flex-basis: 100%; } }

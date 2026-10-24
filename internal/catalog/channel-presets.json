@@ -1,0 +1,272 @@
+[
+  {
+    "id": "deepseek",
+    "name": "深度求索",
+    "label": "深度求索 (DeepSeek)",
+    "category": "cn",
+    "base_url": "https://api.deepseek.com",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": ""
+      }
+    ],
+    "preferred_endpoint": "openai_chat_completions",
+    "hint": "支持 Chat Completions、Responses 及 Messages 兼容端点"
+  },
+  {
+    "id": "kimi-cn",
+    "name": "月之暗面",
+    "label": "月之暗面 (Moonshot)",
+    "category": "cn",
+    "base_url": "https://api.moonshot.cn/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      }
+    ],
+    "hint": "国内版 API，支持前缀缓存与长上下文"
+  },
+  {
+    "id": "glm-cn",
+    "name": "智谱",
+    "label": "智谱 (Zhipu GLM)",
+    "category": "cn",
+    "base_url": "https://open.bigmodel.cn/api/paas/v4",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": ""
+      }
+    ],
+    "hint": "国内版开放平台，Responses 端点支持 7 天服务端会话链"
+  },
+  {
+    "id": "minimax-cn",
+    "name": "稀宇科技",
+    "label": "稀宇科技 (MiniMax)",
+    "category": "cn",
+    "base_url": "https://api.minimax.cn/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": "https://api.minimax.cn/anthropic"
+      }
+    ],
+    "hint": "国内版接口，Messages 格式已自动配置专属 /anthropic 路径"
+  },
+  {
+    "id": "stepfun-cn",
+    "name": "阶跃星辰",
+    "label": "阶跃星辰 (StepFun)",
+    "category": "cn",
+    "base_url": "https://api.stepfun.com/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      }
+    ],
+    "hint": "国内版开放平台接口"
+  },
+  {
+    "id": "xiaomi-mimo",
+    "name": "小米 MiMo",
+    "label": "小米 MiMo",
+    "category": "cn",
+    "base_url": "https://api.xiaomimimo.com/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": "https://api.xiaomimimo.com/anthropic"
+      }
+    ],
+    "hint": "小米大模型开放平台，Messages 格式已自动配置专属 /anthropic 路径"
+  },
+  {
+    "id": "kimi-intl",
+    "name": "Moonshot AI",
+    "label": "Moonshot AI (月之暗面国际版)",
+    "category": "intl",
+    "base_url": "https://api.moonshot.ai/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      }
+    ],
+    "hint": "海外官方域名，适用于海外账号与支付"
+  },
+  {
+    "id": "glm-intl",
+    "name": "Z.ai",
+    "label": "Z.ai (智谱国际版)",
+    "category": "intl",
+    "base_url": "https://api.z.ai/api/paas/v4",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": ""
+      }
+    ],
+    "hint": "智谱海外独立平台 Z.ai 官方端点"
+  },
+  {
+    "id": "minimax-intl",
+    "name": "MiniMax",
+    "label": "MiniMax (稀宇科技国际版)",
+    "category": "intl",
+    "base_url": "https://api.minimax.io/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      },
+      {
+        "format": "anthropic_messages",
+        "base_url": "https://api.minimax.io/anthropic"
+      }
+    ],
+    "hint": "海外官方域名，Messages 格式已自动配置专属 /anthropic 路径"
+  },
+  {
+    "id": "stepfun-intl",
+    "name": "StepFun",
+    "label": "StepFun (阶跃星辰国际版)",
+    "category": "intl",
+    "base_url": "https://api.stepfun.ai/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      }
+    ],
+    "hint": "海外官方开放平台接口"
+  },
+  {
+    "id": "openai",
+    "name": "OpenAI",
+    "label": "OpenAI",
+    "category": "intl",
+    "base_url": "https://api.openai.com/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      },
+      {
+        "format": "openai_responses",
+        "base_url": ""
+      }
+    ],
+    "hint": "官方 API，Responses 端点原生支持会话链与强状态"
+  },
+  {
+    "id": "anthropic",
+    "name": "Anthropic",
+    "label": "Anthropic (Claude)",
+    "category": "intl",
+    "base_url": "https://api.anthropic.com/v1",
+    "endpoints": [
+      {
+        "format": "anthropic_messages",
+        "base_url": ""
+      }
+    ],
+    "preferred_endpoint": "anthropic_messages",
+    "hint": "官方 Messages API，需提供 x-api-key"
+  },
+  {
+    "id": "openrouter",
+    "name": "OpenRouter",
+    "label": "OpenRouter",
+    "category": "intl",
+    "base_url": "https://openrouter.ai/api/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      }
+    ],
+    "hint": "全球模型聚合路由服务，支持拉取海量开源与商业模型"
+  },
+  {
+    "id": "nvidia-nim",
+    "name": "NVIDIA NIM",
+    "label": "NVIDIA NIM",
+    "category": "intl",
+    "base_url": "https://integrate.api.nvidia.com/v1",
+    "endpoints": [
+      {
+        "format": "openai_chat_completions",
+        "base_url": ""
+      }
+    ],
+    "hint": "英伟达官方模型托管平台，兼容 OpenAI Chat Completions"
+  }
+]

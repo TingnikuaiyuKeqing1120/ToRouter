@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <title>to-router 控制台</title>
+    <script>
+      if (window.location.hash.includes('pet') || window.location.search.includes('pet')) {
+        document.documentElement.classList.add('pet-mode');
+      }
+    </script>
+    <style>
+      html.pet-mode,
+      html.pet-mode body,
+      body.pet-mode,
+      html.pet-mode #root,
+      body.pet-mode #root {
+        background: transparent !important;
+        background-color: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

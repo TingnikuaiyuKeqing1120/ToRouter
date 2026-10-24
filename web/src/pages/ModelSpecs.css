@@ -1,0 +1,69 @@
+.model-specs-page { min-width: 0; }
+.model-specs-page .page-header { margin-bottom: 20px; }
+.model-specs-workbench { min-width: 0; overflow: hidden; }
+.model-specs-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 16px; }
+.model-specs-toolbar .search-field { flex: 1; min-width: 200px; max-width: 420px; }
+.model-specs-toolbar .input { min-height: 40px; font-size: 13px; }
+.model-specs-toolbar .btn { min-height: 40px; font-size: 13px; }
+.model-specs-count { margin-left: auto; font-size: 12px; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+.model-specs-channels { padding: 0 16px 12px; border-bottom: 1px solid var(--color-border); }
+.model-specs-channels summary { width: fit-content; min-height: 32px; padding: 6px 0; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; }
+.model-specs-channel-options { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-top: 8px; }
+.model-specs-channel-options > label { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; min-width: 0; max-width: 100%; cursor: pointer; font-size: 13px; }
+.model-specs-channel-options > label span { overflow-wrap: anywhere; }
+.model-specs-target-note { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 12px 16px; margin-bottom: 16px; border: 1px solid var(--color-border); border-radius: 8px; font-size: 13px; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+.model-specs-target-note a { color: var(--color-text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.model-specs-match-hint { margin: -4px 16px 12px; font-size: 12px; line-height: 1.6; color: var(--color-text-secondary); }
+.model-specs-feedback { padding: 12px 16px; }
+.model-specs-results { margin: 12px 16px; font-size: 12px; color: var(--color-text-secondary); }
+.model-specs-results summary { cursor: pointer; }
+.model-specs-results ul { margin: 8px 0 0; padding-left: 18px; overflow-wrap: anywhere; }
+.model-specs-table { table-layout: fixed; min-width: 1000px; font-size: 13px; }
+.model-specs-table th { padding: 8px 12px; font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--color-text-secondary); }
+.model-specs-table td { padding: 8px 12px; overflow-wrap: anywhere; }
+.model-specs-table th:nth-child(2) { width: 13%; }
+.model-specs-table th:nth-child(3) { width: 22%; }
+.model-specs-table th:nth-child(4) { width: 25%; }
+.model-specs-table th:last-child { width: 104px; }
+.model-specs-table .model-specs-selection { width: 44px; padding: 4px; }
+.model-specs-selection label { display: flex; align-items: center; justify-content: center; min-height: 40px; cursor: pointer; }
+.model-specs-table .model-specs-channel-name, .model-specs-table .model-specs-model-id { color: var(--color-text-primary); }
+.model-specs-model-id { font-family: var(--font-mono, ui-monospace, monospace); }
+.model-specs-tokens { font-variant-numeric: tabular-nums; }
+.model-specs-summary { display: flex; flex-direction: column; gap: 5px; font-size: 12px; }
+.model-specs-summary > div { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.model-specs-summary small { flex-shrink: 0; color: var(--color-text-secondary); font-size: 12px; }
+.model-specs-modalities { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.model-specs-modalities > span { display: inline-flex; }
+.model-specs-table .btn { min-height: 36px; font-size: 13px; padding: 6px 8px; white-space: nowrap; }
+.model-specs-table tr[data-selected="true"] { background: var(--color-surface-2); }
+.model-specs-editor { max-width: 920px; height: min(820px, 92dvh); max-height: 92dvh; overflow: hidden; }
+.model-specs-editor .modal-content { display: flex; flex-direction: column; height: 100%; padding: 0; min-height: 0; }
+.model-specs-editor .modal-heading { flex-shrink: 0; padding: 20px 24px 16px; margin: 0; }
+.model-specs-editor .modal-heading h2, .model-specs-editor .modal-heading p { overflow-wrap: anywhere; }
+.model-specs-editor-body { overflow-y: auto; min-height: 0; flex: 1; padding: 0 24px 24px; scrollbar-gutter: stable; }
+.model-specs-editor-body > .error-box { margin-bottom: 16px; }
+.model-specs-editor fieldset { min-width: 0; }
+.model-specs-editor-body fieldset > section > div:first-child { flex-wrap: wrap; }
+.model-specs-editor-body fieldset > section > div:first-child > div { min-width: 0; flex-wrap: wrap; }
+.model-specs-editor-body fieldset > section > div:first-child span { overflow-wrap: anywhere; }
+.model-specs-editor .field-label, .model-specs-editor .input, .model-specs-editor .btn { font-size: 13px; }
+.model-specs-editor .input, .model-specs-editor .btn { min-height: 40px; }
+.model-specs-editor .text-\[10px\], .model-specs-editor .text-\[11px\], .model-specs-editor .field-hint { font-size: 12px; }
+.model-specs-editor .text-\[var\(--color-text-muted\)\] { color: var(--color-text-secondary); }
+.model-specs-editor .modal-footer { flex-shrink: 0; margin: 0; padding: 16px 24px; border-top: 1px solid var(--color-border); }
+@media (max-width: 600px) {
+  .model-specs-toolbar { padding: 12px; gap: 8px; }
+  .model-specs-toolbar .search-field { flex-basis: 100%; max-width: none; min-width: 0; }
+  .model-specs-count { margin-left: 0; margin-right: auto; }
+  .model-specs-channels { padding: 0 12px 12px; }
+  .model-specs-channel-options { column-gap: 12px; }
+  .model-specs-channel-options > label { min-width: 44px; }
+  .model-specs-toolbar .btn, .model-specs-channel-options > label, .model-specs-channels summary, .model-specs-selection label, .model-specs-table .btn { min-height: 44px; }
+  .model-specs-page input, .model-specs-editor .input { font-size: 16px; }
+  .model-specs-editor .modal-heading { padding: 16px; }
+  .model-specs-editor-body { padding: 0 16px 16px; }
+  .model-specs-editor .modal-footer { padding: 12px 16px; }
+  .model-specs-editor .btn, .model-specs-editor .input { min-height: 44px !important; }
+  .model-specs-editor .modal-heading > div { min-width: 0; }
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "providers": [
+    {
+      "id": "codex",
+      "implementation": "internal/codex/profile.go",
+      "sources": [
+        {
+          "repo": "openai/codex",
+          "tracking_ref": "main",
+          "baseline_commit": "1277bcfddc69800c5e3538dccf3f26bedbd80290",
+          "files": [
+            {
+              "path": "codex-rs/codex-api/src/requests/headers.rs",
+              "sha256": "98c9579a8f17327fda1792ffbf22e8d09241fdc79620c37b699d94cd9637cd47"
+            },
+            {
+              "path": "codex-rs/login/src/auth/auth_headers.rs",
+              "sha256": "b36cf260abf2929011a7e02c0ac66c321e92e807266c6dfbb774ca982ca5dc32"
+            },
+            {
+              "path": "codex-rs/login/src/auth/default_client.rs",
+              "sha256": "174e02e439013bf75cccdcfd36b9c23e31d9ee84835a0cc0b1f9d7a33391a064"
+            }
+          ]
+        },
+        {
+          "repo": "router-for-me/CLIProxyAPI",
+          "tracking_ref": "main",
+          "baseline_commit": "d946c4fba6fc9a5cfbca1f3d85184d62ad2fb683",
+          "files": [
+            {
+              "path": "internal/runtime/executor/codex_executor_request.go",
+              "sha256": "69914ac2148ae405a78fb816f6a93acdf3d14d8ca97607e091874c4c80d489d3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "claude",
+      "implementation": "internal/claude/profile.go",
+      "sources": [
+        {
+          "repo": "router-for-me/CLIProxyAPI",
+          "tracking_ref": "main",
+          "baseline_commit": "d946c4fba6fc9a5cfbca1f3d85184d62ad2fb683",
+          "files": [
+            {
+              "path": "internal/runtime/executor/helps/claude_device_profile.go",
+              "sha256": "b5f56541791af13d5d5e7b9f2b219029606b144284daa456320bd7fdf73d822d"
+            },
+            {
+              "path": "internal/runtime/executor/claude_executor_request.go",
+              "sha256": "ef0e7328733e4f125b3cd5e763cf3890d4134c791ef74ba17c108a3135b59ad8"
+            },
+            {
+              "path": "internal/runtime/executor/claude_signing.go",
+              "sha256": "c24d69c9189f95cad1695bb3a5b4fa53ea3be15a3b5cac8e86479544946ee1f2"
+            },
+            {
+              "path": "internal/auth/claude/utls_transport.go",
+              "sha256": "08758da706e0ba597a14b1fbafc2f307834d62028a4716cac1690d88fee78f0e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "antigravity",
+      "implementation": "internal/antigravity/profile.go",
+      "sources": [
+        {
+          "repo": "router-for-me/CLIProxyAPI",
+          "tracking_ref": "main",
+          "baseline_commit": "d946c4fba6fc9a5cfbca1f3d85184d62ad2fb683",
+          "files": [
+            {
+              "path": "internal/runtime/executor/antigravity_executor.go",
+              "sha256": "e9a8298c28ab6af28ecc9966585e31f2ee0848705bc3c676c4bc33bc38d318f8"
+            },
+            {
+              "path": "internal/misc/antigravity_version.go",
+              "sha256": "262917f0c4ffa3d598008082eace8e185e334638ecd6bc4aef3b27df36f2a9bb"
+            }
+          ]
+        },
+        {
+          "repo": "yetone/magpie",
+          "tracking_ref": "main",
+          "baseline_commit": "3dc25a61681fac109c12f4b065146b9204cdc37e",
+          "files": [
+            {
+              "path": "internal/provider/google.go",
+              "sha256": "715d8bc2eaa8473ec397bf40451db266c15a2a9df021f5b12aabdf282a9696d5"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

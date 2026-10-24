@@ -1,0 +1,19 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "ToRouter",
+  "outputfilename": "ToRouter",
+  "frontend:dir": "web",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "to-router"
+  },
+  "info": {
+    "companyName": "to-router",
+    "productName": "ToRouter",
+    "productVersion": "1.0.0",
+    "copyright": "Copyright 2026"
+  }
+}

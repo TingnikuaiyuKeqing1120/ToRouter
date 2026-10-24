@@ -1,0 +1,523 @@
+{
+  "schema": 1,
+  "name": "Lobe Icons curated additions",
+  "repository": "https://github.com/lobehub/lobe-icons",
+  "revision": "8a1b2821bb768c484fe8da20c5e1838b6bf551a9",
+  "license": "MIT",
+  "license_file": "third_party/upstream/lobe-icons-8a1b2821/LICENSE",
+  "license_sha256": "add9d7531d1b21646317a8958e38fc727506fa39d24bdecb44154d943c82753a",
+  "modifications": "SVG files copied unchanged; UI chooses color rendering or a current-color mask.",
+  "icons": [
+    {
+      "id": "gemini",
+      "label": "Google Gemini",
+      "file": "gemini-color.svg",
+      "mode": "color",
+      "matches": [
+        "gemini",
+        "谷歌"
+      ],
+      "upstream_path": "packages/static-svg/icons/gemini-color.svg",
+      "sha256": "8ab0a9bafec11f7e69bcb9fc4ffd8f1bc927d1ddcbbb6ff36dee5ae8b5a9d602"
+    },
+    {
+      "id": "qwen",
+      "label": "Qwen 通义千问",
+      "file": "qwen-color.svg",
+      "mode": "color",
+      "matches": [
+        "qwen",
+        "通义",
+        "千问",
+        "dashscope"
+      ],
+      "upstream_path": "packages/static-svg/icons/qwen-color.svg",
+      "sha256": "77f5768c66d08ce1d3d14e73373975c1bc0454be88c81523ddd0ffd7e2974029"
+    },
+    {
+      "id": "doubao",
+      "label": "豆包",
+      "file": "doubao-color.svg",
+      "mode": "color",
+      "matches": [
+        "doubao",
+        "豆包",
+        "volcengine",
+        "火山"
+      ],
+      "upstream_path": "packages/static-svg/icons/doubao-color.svg",
+      "sha256": "3cd31ba03ae44b8c29561597a3b863809efecb13fcdfd08407a086df86a69b55"
+    },
+    {
+      "id": "hunyuan",
+      "label": "腾讯混元",
+      "file": "hunyuan-color.svg",
+      "mode": "color",
+      "matches": [
+        "hunyuan",
+        "混元"
+      ],
+      "upstream_path": "packages/static-svg/icons/hunyuan-color.svg",
+      "sha256": "510e7bb438506b5aadfaf8b9551d1606efd5b4171161a64a64204c72a453658a"
+    },
+    {
+      "id": "mistral",
+      "label": "Mistral",
+      "file": "mistral-color.svg",
+      "mode": "color",
+      "matches": [
+        "mistral"
+      ],
+      "upstream_path": "packages/static-svg/icons/mistral-color.svg",
+      "sha256": "722f74b289d95486b43662fe24fa883b333701296f618406cd0ed502299170b6"
+    },
+    {
+      "id": "xai",
+      "label": "xAI / Grok",
+      "file": "xai.svg",
+      "mode": "mono",
+      "matches": [
+        "x.ai",
+        "xai",
+        "grok"
+      ],
+      "upstream_path": "packages/static-svg/icons/xai.svg",
+      "sha256": "89eb7de9f0d02a41cfecd9109e253d7fd3529e27467dee4254faa67f3ac21451"
+    },
+    {
+      "id": "meta",
+      "label": "Meta / Llama",
+      "file": "meta-color.svg",
+      "mode": "color",
+      "matches": [
+        "meta",
+        "llama"
+      ],
+      "upstream_path": "packages/static-svg/icons/meta-color.svg",
+      "sha256": "adf9f2c1a646ccd3a37ca8c2e7e5985d64630cd633f4b95fba393d1d44e0578c"
+    },
+    {
+      "id": "perplexity",
+      "label": "Perplexity",
+      "file": "perplexity-color.svg",
+      "mode": "color",
+      "matches": [
+        "perplexity"
+      ],
+      "upstream_path": "packages/static-svg/icons/perplexity-color.svg",
+      "sha256": "8353f3ab20822f1a933224b0ea32cc39f0c32d5740f4af8c254b0f418e0a3a70"
+    },
+    {
+      "id": "vertexai",
+      "label": "Vertex AI",
+      "file": "vertexai-color.svg",
+      "mode": "color",
+      "matches": [
+        "vertex",
+        "aiplatform"
+      ],
+      "upstream_path": "packages/static-svg/icons/vertexai-color.svg",
+      "sha256": "40f8bb6f7aca8d80ce2b0bd0d976e8e3ddeada3719758d262ea20075c11ad764"
+    },
+    {
+      "id": "bedrock",
+      "label": "Amazon Bedrock",
+      "file": "bedrock-color.svg",
+      "mode": "color",
+      "matches": [
+        "bedrock"
+      ],
+      "upstream_path": "packages/static-svg/icons/bedrock-color.svg",
+      "sha256": "a149a5678ce2b5d821759aabca7b815867027a8231a76723b3673580e8177a60"
+    },
+    {
+      "id": "azure",
+      "label": "Azure",
+      "file": "azure-color.svg",
+      "mode": "color",
+      "matches": [
+        "azure"
+      ],
+      "upstream_path": "packages/static-svg/icons/azure-color.svg",
+      "sha256": "abc639d094593943c1b201270f4903c74d02d2e26acf26abf592a29c222c5181"
+    },
+    {
+      "id": "siliconflow",
+      "label": "硅基流动",
+      "file": "siliconcloud-color.svg",
+      "mode": "color",
+      "matches": [
+        "siliconflow",
+        "硅基流动"
+      ],
+      "upstream_path": "packages/static-svg/icons/siliconcloud-color.svg",
+      "sha256": "a02d8d7ccb81739fbc720e2e5daaf149013dd5088605dc2dce1b71df0784d424"
+    },
+    {
+      "id": "codex",
+      "label": "Codex",
+      "file": "codex-color.svg",
+      "mode": "color",
+      "matches": [
+        "codex"
+      ],
+      "upstream_path": "packages/static-svg/icons/codex-color.svg",
+      "sha256": "4a2f43ce46b5b6e3722c95088f88d26ef91e6a8c2e598e70642a1c54367386e4"
+    },
+    {
+      "id": "claude",
+      "label": "Claude",
+      "file": "claude-color.svg",
+      "mode": "color",
+      "matches": [
+        "claude"
+      ],
+      "upstream_path": "packages/static-svg/icons/claude-color.svg",
+      "sha256": "a3101f3047a119aa11825ad9369510f0c472428c8c52d420e31bc62db44a8364"
+    },
+    {
+      "id": "claudecode",
+      "label": "Claude Code",
+      "file": "claudecode-color.svg",
+      "mode": "color",
+      "matches": [
+        "claude code",
+        "claudecode",
+        "claude-code"
+      ],
+      "upstream_path": "packages/static-svg/icons/claudecode-color.svg",
+      "sha256": "670b3d8d749d0815ad8f7e62a59d51cb5e2053cb19403f3541a8aed7036a877f"
+    },
+    {
+      "id": "githubcopilot",
+      "label": "GitHub Copilot",
+      "file": "githubcopilot.svg",
+      "mode": "mono",
+      "matches": [
+        "copilot"
+      ],
+      "upstream_path": "packages/static-svg/icons/githubcopilot.svg",
+      "sha256": "bbc7fddc13448236e5edea8c399d2072dc40aa5da5bca07f7a2f412405c500a3"
+    },
+    {
+      "id": "geminicli",
+      "label": "Gemini CLI",
+      "file": "geminicli-color.svg",
+      "mode": "color",
+      "matches": [
+        "gemini cli",
+        "geminicli",
+        "gemini-cli"
+      ],
+      "upstream_path": "packages/static-svg/icons/geminicli-color.svg",
+      "sha256": "c2f54ebaa4c3b9191c6a07f7b0c66bc78e4abe486003dc564469cf650672663e"
+    },
+    {
+      "id": "antigravity",
+      "label": "Antigravity",
+      "file": "antigravity-color.svg",
+      "mode": "color",
+      "matches": [
+        "antigravity"
+      ],
+      "upstream_path": "packages/static-svg/icons/antigravity-color.svg",
+      "sha256": "652128cf55a28bb958563ee372d0bd00208d9e6fd446f523f77aafd811eef8ca"
+    },
+    {
+      "id": "opencode",
+      "label": "OpenCode",
+      "file": "opencode.svg",
+      "mode": "mono",
+      "matches": [
+        "opencode"
+      ],
+      "upstream_path": "packages/static-svg/icons/opencode.svg",
+      "sha256": "7cfa6e9d6726f7c9fa26c7d9aef0dfec52d20a137380454340f30f12ccbfd302"
+    },
+    {
+      "id": "qoder",
+      "label": "Qoder",
+      "file": "qoder-color.svg",
+      "mode": "color",
+      "matches": [
+        "qoder"
+      ],
+      "upstream_path": "packages/static-svg/icons/qoder-color.svg",
+      "sha256": "396596d247477e2a036c141a16ec266df7b14c0130b777a68fd04bc89af50bc8"
+    },
+    {
+      "id": "devin",
+      "label": "Devin",
+      "file": "devin-color.svg",
+      "mode": "color",
+      "matches": [
+        "devin"
+      ],
+      "upstream_path": "packages/static-svg/icons/devin-color.svg",
+      "sha256": "beb58575f94fda57a6c1f9ed5624e6407bff405f55b6258b53032b674aadd8c8"
+    },
+    {
+      "id": "cursor",
+      "label": "Cursor",
+      "file": "cursor.svg",
+      "mode": "mono",
+      "matches": [
+        "cursor"
+      ],
+      "upstream_path": "packages/static-svg/icons/cursor.svg",
+      "sha256": "0cb51bddf264ae108926fd554c063ef40fc1aac3c5c921ddb39ad184e4e5d0ef"
+    },
+    {
+      "id": "ollama",
+      "label": "Ollama",
+      "file": "ollama.svg",
+      "mode": "mono",
+      "matches": [
+        "ollama"
+      ],
+      "upstream_path": "packages/static-svg/icons/ollama.svg",
+      "sha256": "3a268218fb2e6e81fa31df70f70b51331625047794db81db21d35359428fae7a"
+    },
+    {
+      "id": "lmstudio",
+      "label": "LM Studio",
+      "file": "lmstudio.svg",
+      "mode": "mono",
+      "matches": [
+        "lm studio",
+        "lmstudio",
+        "lm-studio"
+      ],
+      "upstream_path": "packages/static-svg/icons/lmstudio.svg",
+      "sha256": "4a575e8382b52ce742ac5d21d361a7d2a08cea7c12390ee1bbb755ef7d3cc25b"
+    },
+    {
+      "id": "kimi",
+      "label": "Kimi",
+      "file": "kimi.svg",
+      "mode": "mono",
+      "matches": [
+        "kimi"
+      ],
+      "upstream_path": "packages/static-svg/icons/kimi.svg",
+      "sha256": "ed08131b46acf70e6e2144eceb775e74098b58ea65fa21eaee04be7b05cfe63b"
+    },
+    {
+      "id": "zai",
+      "label": "Z.ai",
+      "file": "zai.svg",
+      "mode": "mono",
+      "matches": [
+        "z.ai",
+        "zai"
+      ],
+      "upstream_path": "packages/static-svg/icons/zai.svg",
+      "sha256": "e748cb5108ce37b116d7a5ba97d37e0ae97eadf6849b0de11afb248e244a01e1"
+    },
+    {
+      "id": "codebuddy",
+      "label": "CodeBuddy",
+      "file": "codebuddy-color.svg",
+      "mode": "color",
+      "matches": [
+        "codebuddy",
+        "code buddy"
+      ],
+      "upstream_path": "packages/static-svg/icons/codebuddy-color.svg",
+      "sha256": "033d5da624460e686046f22b4e242b6b86484ad84ec4877e4efa15a9fb642b97"
+    },
+    {
+      "id": "ccswitch",
+      "label": "CC Switch",
+      "file": "ccswitch.png",
+      "mode": "color",
+      "matches": [
+        "cc-switch",
+        "cc switch",
+        "ccswitch"
+      ],
+      "upstream_path": "src-tauri/icons/128x128.png",
+      "sha256": "8e24e5968cac75da1698ae5c2cf2d5f542625bc9d2060b9a052f0348f9cf8795",
+      "repository": "https://github.com/farion1231/cc-switch",
+      "revision": "f92ff0b03964188f1cd011d9302ab8869d7a8219",
+      "license_file": "third_party/upstream/ccswitch-f92ff0b0/LICENSE",
+      "license_sha256": "912b6a597d10c43b40a0909349ed95b052b17efb6502b4898e1b35dafb896755"
+    },
+    {
+      "id": "magpie",
+      "label": "Magpie",
+      "file": "magpie.png",
+      "mode": "color",
+      "matches": [
+        "magpie"
+      ],
+      "upstream_path": "internal/gui/icon-256.png",
+      "sha256": "57437c6596e05a8fcfc42d4288c030aa00ed86b69fe35d464d69d7026150c704",
+      "repository": "https://github.com/yetone/magpie",
+      "revision": "8febe3a50c1b5a51b53d7c2e6a3223cc66e6ccfe",
+      "license_file": "third_party/upstream/magpie-8febe3a5/LICENSE",
+      "license_sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+    },
+    {
+      "id": "cloudflare",
+      "label": "Cloudflare Workers AI",
+      "file": "cloudflare-color.svg",
+      "mode": "color",
+      "matches": [
+        "cloudflare",
+        "workers ai",
+        "workers-ai"
+      ],
+      "upstream_path": "packages/static-svg/icons/cloudflare-color.svg",
+      "sha256": "cee35d3f0ecb7925ce0a89aeaff8b907cadae7c3fe44a23e4001cc8d5ee57502"
+    },
+    {
+      "id": "cline",
+      "label": "Cline",
+      "file": "cline.svg",
+      "mode": "mono",
+      "matches": [
+        "cline"
+      ],
+      "upstream_path": "packages/static-svg/icons/cline.svg",
+      "sha256": "9003d2cdce82b016147b732abb4def60af55c348ba2cea2ba0b69a3c7d159b19"
+    },
+    {
+      "id": "kiro",
+      "label": "Kiro",
+      "file": "kiro-color.svg",
+      "mode": "color",
+      "matches": [
+        "kiro"
+      ],
+      "upstream_path": "packages/static-svg/icons/kiro-color.svg",
+      "sha256": "4eae4d6e818da7342c32c7d443ab7c97b93c544db9af379d5b5bf7f0a3127d66"
+    },
+    {
+      "id": "trae",
+      "label": "Trae",
+      "file": "trae.svg",
+      "mode": "mono",
+      "matches": [
+        "trae"
+      ],
+      "upstream_path": "packages/static-svg/icons/trae.svg",
+      "sha256": "59ef6255dfce52d4b1e77aff4e1b4ee3cda71cda735b4fb45575e9874a1c11f6"
+    },
+    {
+      "id": "commandcode",
+      "label": "Command Code",
+      "file": "commandcode.svg",
+      "mode": "mono",
+      "matches": [
+        "commandcode",
+        "command code"
+      ],
+      "upstream_path": "packages/static-svg/icons/commandcode.svg",
+      "sha256": "0b3090f6e9194f32520e5b98ea43c5bc1a0f04644c94d1bade69fab7413e1531"
+    },
+    {
+      "id": "nousresearch",
+      "label": "Nous Research",
+      "file": "nousresearch.svg",
+      "mode": "mono",
+      "matches": [
+        "nousresearch",
+        "nous portal",
+        "nous-portal"
+      ],
+      "upstream_path": "packages/static-svg/icons/nousresearch.svg",
+      "sha256": "4dc3c7cdf13d2f0bdf16b872d76293f048010a00f580df68a85e1f9c4e500e5d"
+    },
+    {
+      "id": "sensenova",
+      "label": "SenseNova 商汤小浣熊",
+      "file": "sensenova-color.svg",
+      "mode": "color",
+      "matches": [
+        "sensenova",
+        "raccoon",
+        "小浣熊"
+      ],
+      "upstream_path": "packages/static-svg/icons/sensenova-color.svg",
+      "sha256": "bd2e0f8e310ff6a5edcc56a85560221923262767ba76b660a193f45c40c123fa"
+    },
+    {
+      "id": "factory",
+      "label": "Factory",
+      "file": "factory.svg",
+      "mode": "mono",
+      "matches": [
+        "factory"
+      ],
+      "upstream_path": "internal/gui/assets/icons/factory.svg",
+      "sha256": "6a502c844029a326e77aff6554210629ee3e735d81ae42d2b98be0eb20c48bf3",
+      "repository": "https://github.com/yetone/magpie",
+      "revision": "b437e4adb4dba82446e0d625b040a8e2d95004b4",
+      "license_file": "third_party/upstream/magpie-b437e4ad/LICENSE",
+      "license_sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+    },
+    {
+      "id": "zed",
+      "label": "Zed",
+      "file": "zed.svg",
+      "mode": "mono",
+      "matches": [
+        "zed"
+      ],
+      "upstream_path": "internal/gui/assets/icons/zed.svg",
+      "sha256": "f0529485410560c5be58f724330c4f61d84537c4ffc1a5099b3bd58062efd58c",
+      "repository": "https://github.com/yetone/magpie",
+      "revision": "b437e4adb4dba82446e0d625b040a8e2d95004b4",
+      "license_file": "third_party/upstream/magpie-b437e4ad/LICENSE",
+      "license_sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+    },
+    {
+      "id": "mimocode",
+      "label": "MiMo Code",
+      "file": "mimocode.svg",
+      "mode": "mono",
+      "matches": [
+        "mimocode",
+        "mimo code"
+      ],
+      "upstream_path": "internal/gui/assets/icons/mimocode.svg",
+      "sha256": "a1cf318ef84e3bba3d22886150ca45f0865ed339b3d25e858223b51db692e93d",
+      "repository": "https://github.com/yetone/magpie",
+      "revision": "b437e4adb4dba82446e0d625b040a8e2d95004b4",
+      "license_file": "third_party/upstream/magpie-b437e4ad/LICENSE",
+      "license_sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+    },
+    {
+      "id": "workbuddy",
+      "label": "WorkBuddy",
+      "file": "workbuddy-color.svg",
+      "mode": "color",
+      "matches": [
+        "workbuddy",
+        "work buddy"
+      ],
+      "upstream_path": "internal/gui/assets/icons/workbuddy-color.svg",
+      "sha256": "ade134028e69e03453bff956059a0e7f23c7341a0295f16994cecd8d03fc2fd4",
+      "repository": "https://github.com/yetone/magpie",
+      "revision": "b437e4adb4dba82446e0d625b040a8e2d95004b4",
+      "license_file": "third_party/upstream/magpie-b437e4ad/LICENSE",
+      "license_sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+    },
+    {
+      "id": "zcode",
+      "label": "ZCode",
+      "file": "zcode.png",
+      "mode": "color",
+      "matches": [
+        "zcode"
+      ],
+      "upstream_path": "internal/gui/assets/icons/zcode.png",
+      "sha256": "df3aba17ddb55b9cfb21f1f30d11fde7ea93d3193c40b3d6433cf684af942b99",
+      "repository": "https://github.com/yetone/magpie",
+      "revision": "b437e4adb4dba82446e0d625b040a8e2d95004b4",
+      "license_file": "third_party/upstream/magpie-b437e4ad/LICENSE",
+      "license_sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+    }
+  ]
+}

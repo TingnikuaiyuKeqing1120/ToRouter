@@ -1,0 +1,194 @@
+[
+  {
+    "name": "Codex-Manager",
+    "version": "4e63e68d9e4e89aa3ed38e1ca76dffb735326404",
+    "source": "https://github.com/qxcnm/Codex-Manager/tree/4e63e68d9e4e89aa3ed38e1ca76dffb735326404",
+    "directory": "third_party/upstream/Codex-Manager-4e63e68d",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/qxcnm/Codex-Manager/4e63e68d9e4e89aa3ed38e1ca76dffb735326404/LICENSE",
+        "sha256": "b3cd584756c0b14c97fd0aa66b1e28225788d122508707c68bca73b183d3733d"
+      }
+    ],
+    "scope": "OAuth endpoints, usage parsing and gateway research; see docs/protocol-refs and the 2026-10-04 research note."
+  },
+  {
+    "name": "Codex-Manager",
+    "version": "f14bd735dca9203d7430958480b82ba7713641a9",
+    "source": "https://github.com/qxcnm/Codex-Manager/tree/f14bd735dca9203d7430958480b82ba7713641a9",
+    "directory": "third_party/upstream/Codex-Manager-f14bd735",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/qxcnm/Codex-Manager/f14bd735dca9203d7430958480b82ba7713641a9/LICENSE",
+        "sha256": "b3cd584756c0b14c97fd0aa66b1e28225788d122508707c68bca73b183d3733d"
+      }
+    ],
+    "scope": "OAuth usage/reset-credit implementation references recorded in docs/design/oauth-information.md."
+  },
+  {
+    "name": "CLIProxyAPI",
+    "version": "8ef43e4df3b216a42493105d31c2873b69191473",
+    "source": "https://github.com/router-for-me/CLIProxyAPI/tree/8ef43e4df3b216a42493105d31c2873b69191473",
+    "directory": "third_party/upstream/CLIProxyAPI-8ef43e4d",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/8ef43e4df3b216a42493105d31c2873b69191473/LICENSE",
+        "sha256": "879792e89cf1bdd6a8d446033ec87e30496f97dcafc4656dc53f641509b346a6"
+      }
+    ],
+    "scope": "OAuth credential rotation, quota signals and cooldown research."
+  },
+  {
+    "name": "CC Switch",
+    "version": "372b1698968ced988ce046d705732cb799000533",
+    "source": "https://github.com/farion1231/cc-switch/tree/372b1698968ced988ce046d705732cb799000533",
+    "directory": "third_party/upstream/cc-switch-372b1698",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/farion1231/cc-switch/372b1698968ced988ce046d705732cb799000533/LICENSE",
+        "sha256": "912b6a597d10c43b40a0909349ed95b052b17efb6502b4898e1b35dafb896755"
+      }
+    ],
+    "scope": "Copilot OAuth source reference and configuration/product-boundary research. Earlier 2026-10-02 shallow-clone revision was not recorded."
+  },
+  {
+    "name": "New API",
+    "version": "1a4166d8e8ba9802d2ca56fe8ecf0ed5404e80d5",
+    "source": "https://github.com/QuantumNous/new-api/tree/1a4166d8e8ba9802d2ca56fe8ecf0ed5404e80d5",
+    "directory": "third_party/upstream/new-api-1a4166d8",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/QuantumNous/new-api/1a4166d8e8ba9802d2ca56fe8ecf0ed5404e80d5/LICENSE",
+        "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef"
+      },
+      {
+        "file": "NOTICE",
+        "source": "https://raw.githubusercontent.com/QuantumNous/new-api/1a4166d8e8ba9802d2ca56fe8ecf0ed5404e80d5/NOTICE",
+        "sha256": "528067fcdf4f9d7e3fdb489d02cbdd36a0efa63fc2eb1686340612c26beb9f33"
+      }
+    ],
+    "scope": "Gateway/retry mechanism research; inclusion here does not claim New API code is linked into this program."
+  },
+  {
+    "name": "LiteLLM",
+    "version": "9a5e828310efac7cc6646d4725d38cec1ea61f21",
+    "source": "https://github.com/BerriAI/litellm/tree/9a5e828310efac7cc6646d4725d38cec1ea61f21",
+    "directory": "third_party/upstream/litellm-9a5e8283",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/BerriAI/litellm/9a5e828310efac7cc6646d4725d38cec1ea61f21/LICENSE",
+        "sha256": "b170d6bf8e8835dd357e011681db028f4d51e2fb0ea892058f56e01fb39b8273"
+      }
+    ],
+    "scope": "Deployment/fallback/retry research; upstream license distinguishes enterprise scope."
+  },
+  {
+    "name": "OpenAI Codex",
+    "version": "afb436df8b70bb5bc57b86d9a3e829968988cd21",
+    "source": "https://github.com/openai/codex/tree/afb436df8b70bb5bc57b86d9a3e829968988cd21",
+    "directory": "third_party/upstream/codex-afb436df",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/openai/codex/afb436df8b70bb5bc57b86d9a3e829968988cd21/LICENSE",
+        "sha256": "d17f227e4df5da1600391338865ce0f3055211760a36688f816941d58232d8dc"
+      },
+      {
+        "file": "NOTICE",
+        "source": "https://raw.githubusercontent.com/openai/codex/afb436df8b70bb5bc57b86d9a3e829968988cd21/NOTICE",
+        "sha256": "9d71575ecfd9a843fc1677b0efb08053c6ba9fd686a0de1a6f5382fd3c220915"
+      }
+    ],
+    "scope": "Usage-window, reset-credit and request-header source references."
+  },
+  {
+    "name": "CLIProxyAPI",
+    "version": "e7d4c7316fca3fe0e852866f4e611cb4f2fa0764",
+    "source": "https://github.com/router-for-me/CLIProxyAPI/tree/e7d4c7316fca3fe0e852866f4e611cb4f2fa0764",
+    "directory": "third_party/upstream/CLIProxyAPI-e7d4c731",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/router-for-me/CLIProxyAPI/e7d4c7316fca3fe0e852866f4e611cb4f2fa0764/LICENSE",
+        "sha256": "93df585e5fa07ead6d47a3ab2dbdf0255782a39fe830022c0274a70394223cc8"
+      }
+    ],
+    "scope": "Native Claude OAuth, request profile, TLS and CCH adaptation; Antigravity OAuth/project and request envelope implementation; see internal/claude/SOURCE.md and internal/antigravity/SOURCE.md. Devin private RPC fields and account identity mapping; see internal/devin/SOURCE.md."
+  },
+  {
+    "name": "Magpie",
+    "version": "ef655acb40b2b2b5484e8eab41c79ff8b41bb6d3",
+    "source": "https://github.com/yetone/magpie/tree/ef655acb40b2b2b5484e8eab41c79ff8b41bb6d3",
+    "directory": "third_party/upstream/magpie-ef655acb",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/yetone/magpie/ef655acb40b2b2b5484e8eab41c79ff8b41bb6d3/LICENSE",
+        "sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+      }
+    ],
+    "scope": "Antigravity PKCE/project initialization and session envelope implementation; fixed source comparison, no CLI or credential-following code adopted."
+  },
+  {
+    "name": "Magpie community Zen Free plugin",
+    "version": "0.1.11 / d34f78b69a303a620307f1202a77e171a13ecf8f",
+    "source": "https://github.com/magpie-community/plugins/tree/d34f78b69a303a620307f1202a77e171a13ecf8f/packages/zen-free",
+    "directory": "third_party/upstream/magpie-plugins-d34f78b6",
+    "files": [
+      {
+        "file": "LICENSE-ZEN-FREE",
+        "source": "https://raw.githubusercontent.com/magpie-community/plugins/d34f78b69a303a620307f1202a77e171a13ecf8f/packages/zen-free/LICENSE",
+        "sha256": "170ca82fa4255729a826c5eb9abf3f0e0d2e3dde84f024accb5b806473c4ba68"
+      }
+    ],
+    "scope": "Native Go Zen Free catalogue, request profile, public session IDs and same-protocol SSE assembly adaptation; no agent tool injection or CLI execution. See internal/zenfree/SOURCE.md."
+  },
+  {
+    "name": "Magpie community Devin plugin",
+    "version": "0.1.20 / d34f78b69a303a620307f1202a77e171a13ecf8f",
+    "source": "https://github.com/magpie-community/plugins/tree/d34f78b69a303a620307f1202a77e171a13ecf8f/packages/devin",
+    "directory": "third_party/upstream/magpie-plugins-d34f78b6",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/magpie-community/plugins/d34f78b69a303a620307f1202a77e171a13ecf8f/LICENSE",
+        "sha256": "bebc3d1ec74f197b010ed6f6b6743dbae73fe4865d71bd0670b0a4e203056679"
+      }
+    ],
+    "scope": "Native Go independent PKCE, exact model catalogue and private Connect RPC adaptation; no CLI, source-login following, tool injection or fabricated context. See internal/devin/SOURCE.md."
+  },
+  {
+    "name": "Magpie supplier host and market",
+    "version": "b437e4adb4dba82446e0d625b040a8e2d95004b4",
+    "source": "https://github.com/yetone/magpie/tree/b437e4adb4dba82446e0d625b040a8e2d95004b4",
+    "directory": "third_party/upstream/magpie-b437e4ad",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/yetone/magpie/b437e4adb4dba82446e0d625b040a8e2d95004b4/LICENSE",
+        "sha256": "79d2c8444715d4bc453ec4f8a0aaf2051a4c1ee5ac08f5bd2e5848aef87c7572"
+      }
+    ],
+    "scope": "Supplier-only semantic adaptation of internal/plugin/host.js in internal/pluginhost/market.mjs; catalogue, package preparation and Bun runtime selection/checksum references from internal/plugin/market.go, installcache.go and bun.go. Modified private stdio, Store acknowledgement, permissions, stream backpressure and cancellation. No Magpie Go built-ins or unrelated hooks. Bun is optionally downloaded, not bundled into the EXE."
+  },
+  {
+    "name": "Magpie community supplier registry",
+    "version": "a1689b1b6feb37f9de4c213fee276bc9be4676cb",
+    "source": "https://github.com/magpie-community/plugins/tree/a1689b1b6feb37f9de4c213fee276bc9be4676cb",
+    "directory": "third_party/upstream/magpie-plugins-a1689b1b",
+    "files": [
+      {
+        "file": "LICENSE",
+        "source": "https://raw.githubusercontent.com/magpie-community/plugins/a1689b1b6feb37f9de4c213fee276bc9be4676cb/LICENSE",
+        "sha256": "5e8730b694ba31696dd68d693f8bf5e2c75f7e40fd5f6fbc3f067cf9490b24fb"
+      }
+    ],
+    "scope": "Bundled internal/pluginmarket/registry.json retains the 22 supplier records filtered from the fixed upstream registry.json (37 total records), as a cold-start catalogue fallback. Community provenance comes only from the trusted registry. Runtime package downloads and their dependencies retain their own upstream licenses; not all marketplace packages are bundled or audited."
+  }
+]

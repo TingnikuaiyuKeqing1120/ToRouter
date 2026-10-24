@@ -1,0 +1,36 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow-1b" x="0" y="0" width="128" height="128" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect x="12" y="12" width="104" height="104" rx="26" fill="#FFFFFF" filter="url(#shadow-1b)"/>
+  <rect x="12.5" y="12.5" width="103" height="103" rx="25.5" stroke="#E2E8F0" stroke-width="1"/>
+  <g transform="translate(16, 16) scale(0.90)">
+    <path d="M5,24h6v1h-6zM4,25h10v1h-10zM4,26h13v1h-13zM33,26h3v1h-3zM4,27h14v1h-14zM32,27h5v1h-5zM4,28h16v1h-16zM35,28h3v1h-3zM5,29h17v1h-17zM33,29h1v1h-1zM36,29h4v1h-4zM5,30h17v1h-17zM33,30h1v1h-1zM36,30h4v1h-4zM5,31h19v1h-19zM36,31h5v1h-5zM5,32h19v1h-19zM36,32h5v1h-5zM6,33h19v1h-19zM37,33h4v1h-4zM6,34h20v1h-20zM7,35h20v1h-20zM7,36h21v1h-21zM7,37h21v1h-21zM8,38h21v1h-21zM9,39h20v1h-20zM10,40h20v1h-20zM10,41h10v1h-10zM23,41h8v1h-8zM11,42h9v1h-9zM24,42h8v1h-8zM13,43h8v1h-8zM26,43h7v1h-7zM14,44h7v1h-7zM27,44h6v1h-6zM15,45h6v1h-6zM29,45h5v1h-5zM18,46h2v1h-2zM30,46h6v1h-6zM31,47h6v1h-6z" fill="#FFFFFF"/>
+    <path d="M43,8h1v1h-1zM28,9h5v1h-5zM42,9h2v1h-2zM17,10h2v1h-2zM24,10h8v1h-8zM41,10h4v1h-4zM12,11h19v1h-19zM41,11h5v1h-5zM9,12h22v1h-22zM41,12h7v1h-7zM60,12h2v1h-2zM8,13h23v1h-23zM41,13h8v1h-8zM59,13h3v1h-3zM7,14h25v1h-25zM41,14h9v1h-9zM53,14h9v1h-9zM5,15h28v1h-28zM41,15h9v1h-9zM52,15h10v1h-10zM5,16h29v1h-29zM42,16h19v1h-19zM3,17h33v1h-33zM42,17h19v1h-19zM3,18h33v1h-33zM43,18h17v1h-17zM2,19h36v1h-36zM43,19h17v1h-17zM2,20h36v1h-36zM44,20h15v1h-15zM2,21h38v1h-38zM45,21h13v1h-13zM1,22h40v1h-40zM46,22h10v1h-10zM1,23h40v1h-40zM46,23h7v1h-7zM0,24h5v1h-5zM11,24h32v1h-32zM46,24h6v1h-6zM0,25h4v1h-4zM14,25h31v1h-31zM46,25h6v1h-6zM0,26h4v1h-4zM17,26h16v1h-16zM36,26h16v1h-16zM0,27h4v1h-4zM18,27h14v1h-14zM37,27h15v1h-15zM0,28h4v1h-4zM20,28h15v1h-15zM38,28h14v1h-14zM0,29h5v1h-5zM22,29h11v1h-11zM34,29h2v1h-2zM40,29h12v1h-12zM0,30h5v1h-5zM22,30h11v1h-11zM34,30h2v1h-2zM40,30h11v1h-11zM0,31h5v1h-5zM24,31h12v1h-12zM41,31h10v1h-10zM0,32h5v1h-5zM24,32h12v1h-12zM41,32h10v1h-10zM0,33h6v1h-6zM25,33h12v1h-12zM41,33h9v1h-9zM1,34h5v1h-5zM26,34h24v1h-24zM1,35h6v1h-6zM27,35h23v1h-23zM1,36h6v1h-6zM28,36h21v1h-21zM2,37h5v1h-5zM28,37h20v1h-20zM2,38h6v1h-6zM29,38h19v1h-19zM2,39h7v1h-7zM29,39h18v1h-18zM3,40h7v1h-7zM30,40h16v1h-16zM3,41h7v1h-7zM20,41h3v1h-3zM31,41h15v1h-15zM4,42h7v1h-7zM20,42h4v1h-4zM32,42h13v1h-13zM5,43h8v1h-8zM21,43h5v1h-5zM33,43h11v1h-11zM5,44h9v1h-9zM21,44h6v1h-6zM33,44h10v1h-10zM7,45h8v1h-8zM21,45h8v1h-8zM34,45h12v1h-12zM8,46h10v1h-10zM20,46h10v1h-10zM36,46h12v1h-12zM9,47h22v1h-22zM37,47h12v1h-12zM10,48h39v1h-39zM11,49h27v1h-27zM41,49h6v1h-6zM13,50h23v1h-23zM15,51h19v1h-19zM18,52h13v1h-13z" fill="#4D6BFE"/>
+  </g>
+  
+    <g id="diagonal-packets">
+      <rect x="88" y="36" width="5" height="5" rx="1.2" fill="#38BDF8"/>
+      <rect x="76" y="50" width="5.5" height="5.5" rx="1.2" fill="#10B981"/>
+      <rect x="62" y="66" width="6" height="6" rx="1.5" fill="#F59E0B"/>
+      <rect x="48" y="82" width="5.5" height="5.5" rx="1.2" fill="#818CF8"/>
+      <rect x="34" y="96" width="5" height="5" rx="1.2" fill="#38BDF8"/>
+    </g>
+  <g transform="translate(72, 74) scale(2.1)">
+    
+      <rect x="3" y="13" width="1" height="2" fill="#DE886D"/>
+      <rect x="5" y="13" width="1" height="2" fill="#DE886D"/>
+      <rect x="9" y="13" width="1" height="2" fill="#DE886D"/>
+      <rect x="11" y="13" width="1" height="2" fill="#DE886D"/>
+      <rect x="2" y="6" width="11" height="7" fill="#DE886D"/>
+      <rect x="0" y="9" width="2" height="2" fill="#DE886D"/>
+      <rect x="13" y="9" width="2" height="2" fill="#DE886D"/>
+      <path d="M2.5 5 C 2.5 2, 12.5 2, 12.5 5" stroke="#1D5C83" stroke-width="1.2" fill="none"/>
+      <rect x="0.8" y="5" width="2" height="3.5" rx="0.5" fill="#1D5C83"/>
+      <rect x="12.2" y="5" width="2" height="3.5" rx="0.5" fill="#1D5C83"/>
+      <rect x="4" y="8" width="1.5" height="1.5" fill="#0F172A"/>
+      <rect x="9.5" y="8" width="1.5" height="1.5" fill="#0F172A"/>
+  </g>
+</svg>

@@ -1,0 +1,22 @@
+# Source-linked notices and their byte-pinned inputs must survive checkout exactly.
+# Do not let core.autocrlf rewrite legal originals or invalidate their SHA256.
+/third_party/** -text -whitespace
+/web/public/third-party/** -text -whitespace
+/scripts/companion/assets/** -text -whitespace
+# Preserve upstream whitespace; handwritten generators still check whitespace,
+# treating CRLF as a line ending rather than trailing source-code whitespace.
+/scripts/companion/build.mjs -text whitespace=trailing-space,space-before-tab,cr-at-eol
+/scripts/companion/index.template.html -text
+/scripts/check-third-party.py -text whitespace=trailing-space,space-before-tab,cr-at-eol
+/go.mod -text
+/go.sum -text
+/web/package.json -text
+/web/package-lock.json -text
+# Keep the verified optional package and its legal texts reproducible.
+/internal/pluginhost/host.mjs text eol=lf
+/internal/pluginhost/packages/qoder/*.mjs text eol=lf
+/internal/pluginhost/packages/qoder/LICENSE* -text -whitespace
+/internal/pluginhost/packages/workbuddy/*.mjs text eol=lf
+/internal/pluginhost/packages/workbuddy/LICENSE* -text -whitespace
+/internal/pluginhost/packages/minimax/*.mjs text eol=lf
+/internal/pluginhost/packages/minimax/LICENSE* -text -whitespace

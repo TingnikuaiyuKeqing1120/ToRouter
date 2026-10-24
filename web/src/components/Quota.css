@@ -1,0 +1,23 @@
+.channel-quota { margin-top: 8px; border-top: 1px solid var(--color-border); padding-top: 8px; font-size: 12px; }
+.channel-quota-toggle { display:flex; align-items:center; gap:12px; min-height:32px; color:var(--color-text-secondary); }
+.channel-quota-toggle span { color:var(--color-text-muted); }
+.channel-quota-row { display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; padding:4px 0; }
+.channel-quota-name { max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--color-text-secondary); }
+.quota-readout { min-width:0; font-size:12px; }
+.quota-readout-values,.quota-readout-meta { display:flex; flex-wrap:wrap; align-items:center; gap:6px 12px; }
+.quota-readout-values { font-variant-numeric:tabular-nums; }
+.quota-readout-values strong { font-weight:600; }
+.quota-readout-values small { display:block; color:var(--color-text-muted); font-size:11px; }
+.quota-readout-meta { color:var(--color-text-muted); font-size:11px; }
+.quota-readout-warning { color:var(--color-warning, #b7791f); font-size:11px; }
+.quota-refresh { display:inline-flex; justify-content:center; align-items:center; gap:4px; min-height:28px; width:52px; flex-shrink:0; }
+.quota-refresh:disabled { opacity:.5; }
+.quota-readout-compact { font-size:11px; }
+.quota-readout-compact .quota-readout-values { gap:3px 8px; }
+/* Fixed content budget stays independent of viewport height while native resize
+   observes the outer pet. Long lists and multi-window rows scroll within it. */
+.companion-quota-list { max-height:224px; min-height:0; overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; scrollbar-gutter:stable; }
+.companion-quota-list:focus-visible { outline:2px solid currentColor; outline-offset:2px; border-radius:4px; }
+.companion-quota-status { max-height:48px; overflow-y:auto; overflow-wrap:anywhere; }
+.companion-quota-row { width:100%; text-align:left; padding:6px 0; border-bottom:1px solid currentColor; border-color:color-mix(in srgb,currentColor 10%,transparent); }
+.companion-quota-row > span { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; }

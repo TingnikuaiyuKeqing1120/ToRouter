@@ -1,0 +1,37 @@
+{
+  "retrieved": "2026-10-06",
+  "repository": "https://github.com/rullerzhou-afk/clawd-on-desk",
+  "license": "See assets/CLAWD-LICENSE.txt (upstream root LICENSE, GNU AGPL v3)",
+  "files": [
+    {
+      "file": "clawd-sleeping.svg",
+      "source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/main/assets/svg/clawd-sleeping.svg",
+      "git_blob": "31a6a2fce98cd7ed554f2cc569f0fd9cb2fb3e2a"
+    },
+    {
+      "file": "clawd-working-typing.svg",
+      "source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/main/assets/svg/clawd-working-typing.svg",
+      "git_blob": "55a413bee804be39e00951ba2edb457a6c214e88"
+    },
+    {
+      "file": "clawd-working-juggling.svg",
+      "source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/main/assets/svg/clawd-working-juggling.svg",
+      "git_blob": "f32e2b7f21487ad52ee1a88e08f50100b127267f"
+    },
+    {
+      "file": "clawd-working-building.svg",
+      "source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/main/assets/svg/clawd-working-building.svg",
+      "git_blob": "e95f485fd127f9c94c2cc3d5ab1c0594f627125a"
+    },
+    {
+      "file": "clawd-working-debugger.svg",
+      "source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/main/assets/svg/clawd-working-debugger.svg",
+      "git_blob": "7ccb05b2d524e0d6b48119bbd217499fd1923933"
+    },
+    {
+      "file": "clawd-happy.svg",
+      "source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/main/assets/svg/clawd-happy.svg",
+      "git_blob": "df3c8b939477b1130f0e7164debbab0a63a2246e"
+    }
+  ]
+}

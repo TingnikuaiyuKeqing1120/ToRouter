@@ -1,0 +1,69 @@
+.modal.backfill-modal { max-width: 1120px; height: min(800px, calc(100dvh - 48px)); max-height: calc(100dvh - 48px); overflow: hidden; }
+.backfill-modal .modal-content { padding: 0; height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.backfill-modal .modal-heading { flex-shrink: 0; margin: 0; padding: 20px 24px 16px; background: var(--color-surface-1); border-bottom: 1px solid var(--color-border); }
+.backfill-modal .modal-heading p { color: var(--color-text-secondary); }
+.backfill-panel { padding: 20px 24px 0; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.backfill-scroll { flex: 1; min-height: 0; overflow-y: auto; scrollbar-gutter: stable; overflow-anchor: none; padding-bottom: 16px; }
+.backfill-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.backfill-segmented { display: inline-flex; padding: 3px; gap: 2px; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: 10px; }
+.backfill-segmented button { padding: 7px 12px; border-radius: 7px; color: var(--color-text-secondary); font-size: 13px; min-height: 34px; transition: background-color 120ms, color 120ms; }
+.backfill-segmented button[aria-pressed="true"] { background: var(--color-surface-1); color: var(--color-text-primary); box-shadow: 0 1px 3px #0002; font-weight: 600; }
+.backfill-segmented button:focus-visible, .backfill-detail-button:focus-visible, .backfill-range summary:focus-visible, .backfill-price-unit select:focus-visible { outline: 2px solid var(--brand-blue); outline-offset: 2px; }
+.backfill-scope-line { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 12px 0 20px; color: var(--color-text-secondary); font-size: 12px; }
+.backfill-scope-line strong { color: var(--color-text-primary); font-weight: 500; }
+.backfill-notice { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; margin: 14px 0; color: var(--color-text-primary); }
+.backfill-notice svg { color: var(--brand-blue); flex-shrink: 0; margin-top: 2px; }
+.backfill-list-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.backfill-list-heading h3 { font-size: 14px; font-weight: 600; }
+.backfill-list-heading h3 span { margin-left: 8px; font-variant-numeric: tabular-nums; }
+.backfill-list-heading > span { color: var(--color-text-secondary); font-size: 12px; }
+.backfill-table-scroll { overflow-x: auto; }
+.backfill-table { width: 100%; min-width: 760px; table-layout: fixed; border-collapse: collapse; font-size: 13px; }
+.backfill-table th { text-align: left; font-size: 12px; color: var(--color-text-secondary); font-weight: 500; padding: 12px 8px; border-bottom: 1px solid var(--color-border-strong); }
+.backfill-table th:first-child, .backfill-table td:first-child { padding-left: 0; }
+.backfill-table th:last-child { width: 48px; }
+.backfill-table td { padding: 14px 8px; border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+.backfill-table small { display: block; font-size: 12px; color: var(--color-text-secondary); margin-top: 4px; }
+.backfill-channel { display: block; overflow-wrap: anywhere; font-weight: 500; }
+.backfill-model > span { display: block; overflow-wrap: anywhere; font-family: var(--font-mono, monospace); line-height: 1.5; }
+.backfill-table .input { width: 100%; min-width: 0; padding: 7px 8px; height: 36px; font-size: 13px; font-variant-numeric: tabular-nums; text-align: right; }
+.backfill-table .input::placeholder { font-size: 12px; text-align: right; color: var(--color-text-secondary); opacity: 1; }
+.backfill-table input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+.backfill-table input::-webkit-inner-spin-button, .backfill-table input::-webkit-outer-spin-button { appearance: none; margin: 0; }
+.backfill-price-unit { display: flex; align-items: center; flex-wrap: wrap; gap: 3px; margin-top: 6px; }
+.backfill-price-unit small { margin: 0; }
+.backfill-price-unit select { padding: 2px 0; background: transparent; color: var(--color-text-secondary); font-size: 12px; border: none; cursor: pointer; }
+.backfill-price-unit option { color: var(--color-text-primary); background: var(--color-surface-1); }
+.backfill-detail-button { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; color: var(--color-text-secondary); }
+.backfill-detail-button:hover { background: var(--color-surface-2); color: var(--color-text-primary); }
+.backfill-detail > td { padding: 16px !important; background: var(--color-surface-2); }
+.backfill-detail dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 24px; margin-bottom: 12px; }
+.backfill-detail dt { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 4px; }
+.backfill-detail dd { font-size: 12px; overflow-wrap: anywhere; line-height: 1.6; }
+.backfill-empty { padding: 38px 16px; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--color-text-secondary); font-size: 14px; }
+.backfill-empty svg { color: var(--brand-blue); }
+.backfill-range { margin-top: 24px; border-top: 1px solid var(--color-border); padding-top: 14px; }
+.backfill-range summary { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; list-style: none; min-height: 32px; }
+.backfill-range summary::-webkit-details-marker { display: none; }
+.backfill-range summary span { margin-left: auto; color: var(--color-text-secondary); font-size: 12px; }
+.backfill-range[open] summary > svg:last-child { transform: rotate(180deg); }
+.backfill-range fieldset { margin-top: 14px; }
+.backfill-range-actions { display: flex; gap: 8px; margin-top: 14px; }
+.backfill-validation { margin-top: 10px; font-size: 13px; color: var(--color-text-primary); }
+.backfill-footer { flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; padding: 16px 24px; border-top: 1px solid var(--color-border); background: var(--color-surface-1); }
+.backfill-footer > span { color: var(--color-text-secondary); font-size: 12px; }
+.backfill-footer > div { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 640px) {
+  .modal.backfill-modal { width: calc(100% - 20px); height: calc(100dvh - 24px); max-height: calc(100dvh - 24px); }
+  .backfill-modal .modal-heading { padding: 16px; }
+  .backfill-panel { padding: 16px 16px 0; }
+  .backfill-toolbar { gap: 10px; }
+  .backfill-toolbar > .btn { width: 100%; justify-content: center; }
+  .backfill-footer { padding: 12px 16px; }
+  .backfill-footer > div { width: 100%; }
+  .backfill-footer > div .btn { flex: 1; justify-content: center; padding: 8px; }
+  .backfill-detail dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .backfill-segmented button { transition: none; }
+}

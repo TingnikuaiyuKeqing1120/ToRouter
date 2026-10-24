@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-scene="idle" data-paused="false" data-greeting="false" data-reaction="cheer">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>to-router · 小小搭档</title>
+  <!-- Clawd animations: rullerzhou-afk/clawd-on-desk (GNU AGPL v3).
+       Adaptations: scoped identifiers, scene composition, timing overrides.
+       Original files and source blob IDs accompany this preview in assets/. -->
+  <script type="text/plain" id="clawd-license">{{CLAWD_LICENSE}}</script>
+  <style>
+    :root { color-scheme:dark; --paper:#111a24; --ink:#e5ecf2; --muted:#91a0ae; --faint:#647687; --line:#ffffff13; --panel:#1b2732ed; --control:#202e3b; --blue:#91a8ff; --whale-blue:#647bff; --green:#85c6ae; --shadow:#060c14; --floor:#667e94; --pet-size:360px; font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif; }
+    :root[data-theme="light"] { color-scheme:light; --paper:#f4f2ec; --ink:#303c47; --muted:#717d86; --faint:#929ca2; --line:#293d5018; --panel:#fffefaeb; --control:#e9e8e2; --blue:#4e64bb; --whale-blue:#526bf4; --green:#397d67; --shadow:#697c90; --floor:#8193a4; }
+    :root { --amber:#dfb87c; --red:#e6a0a4; --state-color:var(--green); }
+    :root[data-theme="light"] { --amber:#a26a24; --red:#b74f5f; }
+    :root[data-scene="retry"] { --state-color:var(--amber); }
+    :root[data-scene="error"] { --state-color:var(--red); }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:var(--paper); color:var(--ink); transition:background .3s,color .3s; }
+    body::before { content:""; position:fixed; pointer-events:none; inset:0; background:radial-gradient(ellipse at 50% 45%,#768faa0b,transparent 57%); }
+    button,a { -webkit-tap-highlight-color:transparent; }
+    button { font:inherit; color:inherit; cursor:pointer; }
+    button:focus-visible,a:focus-visible { outline:2px solid var(--blue); outline-offset:5px; }
+    button:disabled { cursor:default; }
+    header { height:70px; padding:0 42px; display:flex; align-items:center; justify-content:space-between; position:relative; }
+    .brand { display:flex; align-items:center; gap:11px; font-size:14px; font-weight:600; letter-spacing:-.3px; }
+    .brand-mark { display:flex; align-items:center; gap:3px; transform:rotate(-12deg); }
+    .brand-mark i { display:block; width:10px; height:14px; border-radius:6px; background:#6e85f7; }
+    .brand-mark i:last-child { width:8px; height:10px; background:#de886d; }
+    .brand small { font-size:10px; font-weight:400; letter-spacing:1.6px; padding-left:12px; border-left:1px solid var(--line); color:var(--muted); }
+    .tools { display:flex; gap:6px; }
+    .tool { display:grid; place-items:center; width:36px; height:36px; padding:0; border:1px solid transparent; background:transparent; border-radius:10px; color:var(--muted); transition:background .2s,color .2s; }
+    .tool:hover,.tool[aria-pressed="true"] { background:var(--control); color:var(--ink); }
+    .tool svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+    main { min-height:calc(100svh - 122px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px 20px 20px; position:relative; }
+    .eyebrow { margin:0 0 8px; color:var(--faint); font-size:10px; letter-spacing:2.8px; }
+    h1 { margin:0; font-size:24px; font-weight:500; letter-spacing:2px; }
+    .companion { width:min(var(--pet-size),calc(100vw - 40px)); margin:17px 0 0; transition:width .25s; }
+    :root[data-size="large"] { --pet-size:504px; }
+    .stage-button { width:100%; display:block; position:relative; padding:0; margin:0; border:0; background:none; border-radius:36px; cursor:pointer; touch-action:manipulation; }
+    .stage-button:focus-visible { outline-offset:-5px; }
+    #world { width:100%; height:auto; display:block; overflow:visible; }
+    .scene { opacity:0; visibility:hidden; transition:opacity .32s ease,visibility .32s; }
+    .scene.is-active { opacity:1; visibility:visible; }
+    .scene:not(.is-active) *,.hello-clawd * { animation-play-state:paused !important; }
+    .hello-clawd { opacity:0; pointer-events:none; }
+    :root[data-greeting="true"][data-reaction="cheer"] .is-active .hello-clawd { opacity:1; }
+    :root[data-greeting="true"][data-reaction="cheer"] .is-active .hello-clawd * { animation-play-state:running !important; }
+    :root[data-greeting="true"][data-reaction="cheer"] .is-active .normal-clawd { opacity:0; }
+    :root[data-paused="true"] #world * { animation-play-state:paused !important; }
+    .whale-rest { transform-origin:70px 96px; animation:whale-rest 5.4s ease-in-out infinite; }
+    @keyframes whale-rest { 0%,72%,100%{transform:scale(1)} 32%,43%{transform:scale(1.018,.972) translateY(2px)} }
+    .whale-eye { transform-box:fill-box; transform-origin:center; }
+    .sleep-z { fill:var(--blue); opacity:0; animation:sleep-z 6s ease-in-out infinite; font-size:10px; font-weight:600; }
+    .sleep-z.z-second { animation-delay:2.6s; font-size:8px; }
+    @keyframes sleep-z { 0%,12%{transform:translate(0,4px);opacity:0} 28%{opacity:.65} 82%{opacity:.45} 100%{transform:translate(8px,-25px);opacity:0} }
+    .dream-bubble { fill:none; stroke:var(--blue); stroke-width:.9; animation:dream-bubble 7s ease-out infinite; opacity:0; }
+    @keyframes dream-bubble { 0%,64%{transform:translateY(0);opacity:0} 70%{opacity:.4} 100%{transform:translate(5px,-22px);opacity:0} }
+    .work-nod { transform-origin:66px 107px; animation:work-nod 3.8s ease-in-out infinite; }
+    @keyframes work-nod { 0%,14%,100%{transform:rotate(0)} 24%,32%{transform:rotate(-1.4deg)} 40%,70%{transform:rotate(0)} 76%,80%{transform:rotate(-.8deg)} }
+    .work-nod .whale-eye { animation:whale-blink 8s infinite; }
+    @keyframes whale-blink { 0%,47%,51%,100%{transform:scaleY(1)} 49%{transform:scaleY(.15)} }
+    .water-drop { fill:var(--whale-blue); opacity:0; animation:spout 4.5s ease-out infinite; }
+    .water-drop.d2 { animation-delay:.18s; }
+    .water-drop.d3 { animation-delay:.35s; }
+    @keyframes spout { 0%,52%{transform:translateY(6px) scale(.7);opacity:0} 58%{opacity:.9} 76%{transform:translateY(-7px) scale(1);opacity:0} 100%{opacity:0} }
+    .laptop-cursor { stroke:#dbe7ff; stroke-width:1.5; stroke-linecap:round; animation:cursor-pulse 1.6s steps(1) infinite; }
+    @keyframes cursor-pulse { 0%,55%{opacity:.8} 56%,100%{opacity:0} }
+    .work-thread { stroke:var(--blue); stroke-width:1; stroke-dasharray:2 6; opacity:.17; fill:none; }
+    .work-packet { fill:#b6caef; opacity:0; animation:pass-packet 4s ease-in-out infinite; }
+    @keyframes pass-packet { 0%,40%,100%{transform:translateX(0);opacity:0} 50%{opacity:.7} 75%{transform:translateX(43px);opacity:0} }
+    .ct-body-bounce { animation-duration:.58s; }
+    .ct-arm-l-type { animation-duration:.24s; }
+    .ct-arm-r-type { animation-duration:.28s; }
+    .ct-data-bit { display:none; }
+    .ct-shadow-anim { opacity:.15; }
+    .cs-shadow-breathe { fill:var(--shadow); }
+    .surf-rig { transform-origin:72px 58px; animation:surf-rise 2.9s ease-in-out infinite; }
+    @keyframes surf-rise { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-4px) rotate(1deg)} }
+    .surf-rig .whale-eye { animation:whale-blink 6.5s infinite; }
+    .cj-root > .cj-shadow-anim { display:none; }
+    .cj-breathe { animation:none; }
+    .cj-body-rock { animation-duration:1.8s; }
+    .cj-arm-juggle-l,.cj-arm-juggle-r,.cj-packet { animation-duration:1.8s; }
+    .cj-p2 { animation-delay:-.6s; }
+    .cj-p3 { animation-delay:-1.2s; }
+    .cj-eye-track { animation-duration:3.6s; }
+    .wave { fill:none; stroke-linecap:round; animation:wave-travel 2.9s linear infinite; }
+    .wave-back { stroke:#558fc5; stroke-width:1.6; opacity:.35; }
+    .wave-front { stroke:#8cd3ee; stroke-width:1.8; opacity:.72; animation-duration:2.1s; }
+    @keyframes wave-travel { to { transform:translateX(60px); } }
+    .surf-splash { fill:#a7d9eb; opacity:0; animation:surf-splash 2.9s ease-out infinite; }
+    .surf-splash.s2 { animation-delay:.18s; }
+    .surf-splash.s3 { animation-delay:1.4s; }
+    @keyframes surf-splash { 0%,35%{transform:translate(0,0);opacity:0} 42%{opacity:.8} 70%{transform:translate(17px,-12px);opacity:0} 100%{opacity:0} }
+    .surf-wind { stroke:var(--blue); stroke-width:1.1; opacity:0; stroke-linecap:round; animation:wind 4s ease-out infinite; }
+    .surf-wind.w2 { animation-delay:1.8s; }
+    @keyframes wind { 0%,40%{transform:translateX(-10px);opacity:0} 55%{opacity:.2} 85%,100%{transform:translateX(18px);opacity:0} }
+    .retry-startle { transform-origin:70px 94px; animation:retry-startle .85s ease-out both; }
+    @keyframes retry-startle { 0%{transform:translateY(0) rotate(0)} 18%{transform:translateY(-6px) rotate(-4deg)} 40%{transform:translateY(-2px) rotate(2deg)} 65%{transform:translateY(0) rotate(-1deg)} 100%{transform:none} }
+    .retry-breathe { transform-origin:70px 94px; animation:retry-breathe 5s ease-in-out infinite; }
+    @keyframes retry-breathe { 0%,65%,100%{transform:scale(1)} 35%{transform:scale(1.012,.988)} }
+    .awake-eye { transform-box:fill-box; transform-origin:center; animation:awake-blink 6s ease-in-out infinite; }
+    @keyframes awake-blink { 0%,75%,81%,100%{transform:scaleY(1)} 78%{transform:scaleY(.15)} }
+    .startled-rays { stroke:var(--amber); stroke-width:1.7; stroke-linecap:round; animation:startled-rays .9s ease-out both; }
+    @keyframes startled-rays { 0%,15%{opacity:0} 24%,48%{opacity:.85} 100%{opacity:0} }
+    .retry-sweat { fill:#99cce5; animation:retry-sweat 6s ease-out infinite; }
+    @keyframes retry-sweat { 0%,8%{opacity:0;transform:translateY(-4px)} 15%{opacity:.65} 35%,100%{opacity:0;transform:translateY(7px)} }
+    .repair-link { stroke:var(--amber); stroke-width:1.2; stroke-dasharray:2 5; opacity:.35; fill:none; animation:repair-link 3.6s linear infinite; }
+    @keyframes repair-link { to{stroke-dashoffset:-21} }
+    .cb-root .cb-body-bounce,.cb-root .cb-body-squash,.cb-root .cb-arm-hammer,.cb-root .cb-arm-l-rest,.cb-root .cb-shadow-anim,.cb-root .cb-hot-metal,.cb-root .cb-spark { animation-duration:1.8s; }
+    .cb-root .cb-sweat { display:none; }
+    .cb-root .cb-shadow-anim,.cd-root .cd-shadow-main { fill:var(--shadow); opacity:.15; }
+    .fault-whale { --whale-blue:#667ca8; opacity:.83; }
+    .fault-whale .whale-eye { transform-box:fill-box; transform-origin:center; transform:rotate(-8deg); }
+    .fault-breathe { transform-origin:70px 94px; animation:fault-breathe 6s ease-in-out infinite; }
+    @keyframes fault-breathe { 0%,75%,100%{transform:translateY(0)} 40%{transform:translateY(1.4px)} }
+    .fault-halo { fill:var(--red); opacity:.1; animation:fault-halo 4s ease-in-out infinite; transform-origin:119px 103px; }
+    @keyframes fault-halo { 0%,100%{opacity:.08;transform:scale(.95)} 50%{opacity:.2;transform:scale(1.15)} }
+    .fault-mark { fill:var(--red); }
+    .fault-ripple { fill:none; stroke:var(--floor); opacity:.15; stroke-width:1; }
+    .cd-root .cd-glass-vis { animation:none; opacity:1; }
+    .cd-root .cd-body-main,.cd-root .cd-shadow-main,.cd-root .cd-arm-l,.cd-root .cd-arm-r,.cd-root .cd-eye-squint,.cd-root .cd-legs-idle,.cd-root .cd-legs-sneak { animation-delay:-2s; }
+    .completion-nod { transform-origin:70px 96px; animation:completion-nod 2.8s ease-in-out both; }
+    @keyframes completion-nod { 0%,100%{transform:translateY(0) rotate(0)} 18%{transform:translateY(-3px) rotate(-2deg)} 38%{transform:translateY(0) rotate(1deg)} 62%{transform:translateY(-2px) rotate(-1deg)} 85%{transform:translateY(0) rotate(0)} }
+    .cc-root .cc-bounce-anim { animation-duration:1.1s; animation-iteration-count:2; animation-fill-mode:both; }
+    .cc-root .cc-arm-l,.cc-root .cc-arm-r { animation-duration:.24s; }
+    .completion-drop { fill:#91cce7; opacity:0; animation:completion-spout 1.3s ease-out 2; }
+    .completion-drop.c2 { animation-delay:.12s; }
+    .completion-drop.c3 { animation-delay:.24s; }
+    @keyframes completion-spout { 0%{transform:translateY(10px) scale(.6);opacity:0} 24%{opacity:.85} 100%{transform:translateY(-13px) scale(1.1);opacity:0} }
+    .completion-check { fill:none; stroke:var(--green); stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:20; stroke-dashoffset:20; animation:completion-check .65s ease .25s both; }
+    @keyframes completion-check { to{stroke-dashoffset:0} }
+    .greeting-caption { position:absolute; left:50%; top:24px; transform:translate(-50%,6px); white-space:nowrap; background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:6px 11px; font-size:11px; color:var(--ink); opacity:0; transition:opacity .2s,transform .2s; pointer-events:none; }
+    :root[data-greeting="true"] .greeting-caption { opacity:1; transform:translate(-50%,0); }
+    .telemetry { width:min(300px,100%); margin:-1px auto 0; padding:15px 17px 14px; border-radius:18px; background:var(--panel); border:1px solid var(--line); box-shadow:0 10px 32px -18px var(--shadow); position:relative; }
+    .readout-main { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .readout-title { display:flex; align-items:center; gap:7px; min-width:0; font-size:12px; font-weight:500; }
+    .status-dot { width:5px; height:5px; border-radius:50%; background:var(--state-color); flex:none; }
+    :root[data-scene="retry"] .readout-speed,:root[data-scene="error"] .readout-speed,:root[data-scene="done"] .readout-speed { color:var(--state-color); }
+    #model { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .readout-speed { font-family:"Cascadia Code",Consolas,monospace; font-size:15px; font-weight:500; white-space:nowrap; }
+    .readout-speed small { font-family:inherit; font-size:9px; color:var(--muted); font-weight:400; padding-left:3px; }
+    .readout-meta { display:flex; justify-content:space-between; gap:8px; margin-top:8px; font-size:10px; color:var(--muted); font-variant-numeric:tabular-nums; }
+    .mini-streams { display:none; gap:5px; align-items:center; margin-top:12px; height:3px; }
+    :root[data-scene="surf"] .mini-streams { display:flex; }
+    .mini-streams i { height:3px; flex:1; border-radius:2px; opacity:.65; background:#85a9e3; }
+    .mini-streams i:nth-child(2) { background:#de997a; flex:.8; }
+    .mini-streams i:nth-child(3) { background:#82b59c; flex:.55; }
+    .scene-copy { color:var(--muted); font-size:11px; margin:20px 0 0; height:18px; letter-spacing:.25px; text-align:center; }
+    .scene-switch { margin-top:26px; width:min(330px,100%); display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:5px; padding:5px; border:1px solid var(--line); border-radius:15px; background:var(--panel); }
+    .scene-switch button { position:relative; border:0; padding:10px 16px; border-radius:10px; background:transparent; color:var(--muted); font-size:12px; transition:color .2s,background .2s; white-space:nowrap; }
+    .scene-switch button[aria-pressed="true"] { background:var(--control); color:var(--ink); }
+    .scene-switch button:hover { color:var(--ink); }
+    .scene-switch em { font-style:normal; font-family:Consolas,monospace; font-size:9px; margin-right:6px; opacity:.45; }
+    .playback { margin-top:15px; display:flex; align-items:center; justify-content:center; gap:15px; font-size:10px; color:var(--faint); }
+    .text-button { border:0; background:none; color:var(--muted); padding:5px 2px; font-size:10px; display:flex; align-items:center; gap:5px; }
+    .text-button[aria-pressed="true"] { color:var(--blue); }
+    .playback-divider { width:1px; height:9px; background:var(--line); }
+    footer { min-height:52px; padding:12px 30px 14px; display:flex; justify-content:center; align-items:center; gap:8px; font-size:9px; color:var(--faint); position:relative; }
+    footer a { color:inherit; text-underline-offset:3px; text-decoration-color:var(--line); }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    @media (max-width:480px) { header { height:65px; padding:0 20px; } .brand small { display:none; } main { min-height:calc(100svh - 121px); padding-top:15px; } h1{font-size:21px} .scene-switch button { padding:10px 12px; } .companion { margin-top:10px; } footer{font-size:8px;padding:12px 15px} }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { transition:none !important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i></span>to-router <small>COMPANION</small></div>
+    <div class="tools" aria-label="演示设置">
+      <button class="tool" id="size" type="button" aria-label="放大查看" aria-pressed="false" title="放大查看">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M8 8l-5-5m13 5 5-5M8 16l-5 5m13-5 5 5"/></svg>
+      </button>
+      <button class="tool" id="pause" type="button" aria-label="暂停动画" aria-pressed="false" title="暂停动画">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path id="pause-icon" d="M8 5v14M16 5v14"/></svg>
+      </button>
+      <button class="tool" id="theme" type="button" aria-label="切换到浅色" aria-pressed="false" title="切换到浅色">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>
+      </button>
+    </div>
+  </header>
+  <main>
+    <p class="eyebrow">A LITTLE COMPANY</p>
+    <h1>一起发呆，一起忙。</h1>
+    <section class="companion" aria-label="桌宠预览">
+      <button class="stage-button" id="pet" type="button" aria-label="摸摸蓝鲸和 Clawd" title="点点它们，打个招呼">
+        <span class="greeting-caption" id="greeting-caption" aria-hidden="true">好啦，接着陪你。</span>
+        <svg id="world" viewBox="0 24 360 216" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="ground"><stop stop-color="var(--floor)" stop-opacity=".14"/><stop offset="1" stop-color="var(--floor)" stop-opacity="0"/></radialGradient>
+            <linearGradient id="water" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#70bbd5" stop-opacity=".05"/><stop offset="1" stop-color="#509ecb" stop-opacity=".18"/></linearGradient>
+            <clipPath id="water-clip"><ellipse cx="180" cy="211" rx="139" ry="22"/></clipPath>
+          </defs>
+          <g class="scene is-active" data-scene="idle">
+            <ellipse cx="177" cy="199" rx="136" ry="17" fill="url(#ground)"/>
+            <ellipse cx="125" cy="198" rx="53" ry="3.4" fill="var(--shadow)" opacity=".12"/>
+            <g transform="translate(58 99) scale(1.04)"><g class="whale-rest">{{WHALE_SLEEP}}</g></g>
+            <text class="sleep-z" x="112" y="101">z</text><text class="sleep-z z-second" x="122" y="98">z</text>
+            <circle class="dream-bubble" cx="165" cy="110" r="3"/>
+            <g transform="translate(219 140) scale(3.8)"><g class="normal-clawd">{{CLAWD_SLEEP}}</g><g class="hello-clawd">{{CLAWD_HAPPY_SLEEP}}</g></g>
+          </g>
+          <g class="scene" data-scene="work">
+            <ellipse cx="178" cy="199" rx="140" ry="17" fill="url(#ground)"/>
+            <ellipse cx="123" cy="196" rx="48" ry="3" fill="var(--shadow)" opacity=".12"/>
+            <g transform="translate(79 101) scale(.89)"><g class="work-nod">{{WHALE_WORK}}</g></g>
+            <g transform="translate(31 166) scale(.73)">{{LAPTOP}}<path class="laptop-cursor" d="M14 13h9m-6 6h7"/></g>
+            <g transform="translate(134 100)"><path class="water-drop" d="M0 -10Q4 -20 8 -19Q12 -10 0 -10"/><path class="water-drop d2" d="M10 -8Q15 -15 19 -10Q21 -4 10 -8"/><circle class="water-drop d3" cx="4" cy="-24" r="2"/></g>
+            <path class="work-thread" d="M192 162Q210 155 231 162"/>
+            <rect class="work-packet" x="190" y="158" width="3" height="3" rx=".6"/>
+            <g transform="translate(228 141) scale(3.65)"><g class="normal-clawd">{{CLAWD_TYPE}}</g><g class="hello-clawd">{{CLAWD_HAPPY_WORK}}</g></g>
+          </g>
+          <g class="scene" data-scene="surf">
+            <path class="surf-wind" d="M48 130h23m-12 9h11"/><path class="surf-wind w2" d="M281 114h16m-10 9h21"/>
+            <g clip-path="url(#water-clip)">
+              <ellipse cx="180" cy="211" rx="139" ry="22" fill="url(#water)"/>
+              <path class="wave wave-back" d="M-30 204q15 -6 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0"/>
+            </g>
+            <g transform="translate(89 91) scale(1.18)"><g class="surf-rig">
+              {{WHALE_WORK}}
+              <g transform="translate(27 -29) scale(2.6)"><g class="normal-clawd">{{CLAWD_JUGGLE}}</g><g class="hello-clawd">{{CLAWD_HAPPY_SURF}}</g></g>
+            </g></g>
+            <g clip-path="url(#water-clip)">
+              <path class="wave wave-front" d="M-30 217q15 -5 30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0t30 0"/>
+            </g>
+            <ellipse class="surf-splash" cx="259" cy="201" rx="2.2" ry="1.5"/>
+            <circle class="surf-splash s2" cx="270" cy="207" r="1.5"/>
+            <circle class="surf-splash s3" cx="109" cy="212" r="1.6"/>
+          </g>
+          <g class="scene" data-scene="retry">
+            <ellipse cx="180" cy="199" rx="138" ry="17" fill="url(#ground)"/>
+            <ellipse cx="117" cy="198" rx="47" ry="3" fill="var(--shadow)" opacity=".12"/>
+            <g transform="translate(52 101)"><g class="retry-startle"><g class="retry-breathe">{{WHALE_WAKE}}</g></g></g>
+            <path class="startled-rays" d="M93 98l-5 -7m13 4 -1 -9m10 8 3 -7"/>
+            <path class="retry-sweat" d="M188 138Q181 147 187 148Q194 149 188 138Z"/>
+            <path class="repair-link" d="M183 180Q207 170 225 182"/>
+            <g transform="translate(225 142) scale(3.5)">{{CLAWD_BUILD}}</g>
+          </g>
+          <g class="scene" data-scene="error">
+            <ellipse cx="180" cy="199" rx="137" ry="17" fill="url(#ground)"/>
+            <g transform="translate(61 116) scale(.86)"><g class="fault-whale fault-breathe">{{WHALE_SLEEP}}</g></g>
+            <path class="fault-ripple" d="M66 206q50 -9 108 0m-97 4q43 -6 84 -1"/>
+            <circle class="fault-halo" cx="119" cy="103" r="16"/>
+            <circle class="fault-mark" cx="119" cy="103" r="9"/>
+            <path d="M119 98v5m0 4v.2" stroke="var(--paper)" stroke-width="2" stroke-linecap="round"/>
+            <g transform="translate(230 140) scale(3.8)">{{CLAWD_DEBUG}}</g>
+          </g>
+          <g class="scene" data-scene="done">
+            <ellipse cx="178" cy="199" rx="137" ry="17" fill="url(#ground)"/>
+            <ellipse cx="121" cy="198" rx="48" ry="3" fill="var(--shadow)" opacity=".12"/>
+            <g transform="translate(54 100)"><g class="completion-nod">{{WHALE_SLEEP}}</g></g>
+            <g transform="translate(111 100)"><path class="completion-drop" d="M0 -8Q3 -19 7 -18Q11 -8 0 -8"/><path class="completion-drop c2" d="M12 -5Q17 -14 20 -8Q23 -2 12 -5"/><circle class="completion-drop c3" cx="9" cy="-24" r="2"/></g>
+            <g transform="translate(224 140) scale(3.8)">{{CLAWD_COMPLETE}}</g>
+            <circle cx="199" cy="133" r="13" fill="var(--green)" opacity=".09"/>
+            <path class="completion-check" d="M193 133l4 4 8 -9"/>
+          </g>
+        </svg>
+      </button>
+      <div class="telemetry" aria-label="模拟网关状态">
+        <div class="readout-main"><span class="readout-title"><i class="status-dot" aria-hidden="true"></i><span id="model">休息一下</span></span><span class="readout-speed"><span id="speed">86</span><small id="speed-unit">次 / 今日</small></span></div>
+        <div class="readout-meta"><span id="meta-left">今天也配合得不错</span><span id="meta-right">12.4k tokens</span></div>
+        <div class="mini-streams" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+    </section>
+    <p class="scene-copy" id="scene-copy">没有请求的时候，就一起打个盹。</p>
+    <div class="scene-switch" role="group" aria-label="选择演示场景">
+      <button type="button" data-mode="idle" aria-pressed="true"><em>01</em>打个盹</button>
+      <button type="button" data-mode="work" aria-pressed="false"><em>02</em>认真工作</button>
+      <button type="button" data-mode="surf" aria-pressed="false"><em>03</em>乘风破浪</button>
+      <button type="button" data-mode="retry" aria-pressed="false"><em>04</em>修修就好</button>
+      <button type="button" data-mode="error" aria-pressed="false"><em>05</em>查个明白</button>
+      <button type="button" data-mode="done" aria-pressed="false"><em>06</em>收工啦</button>
+    </div>
+    <div class="playback"><button class="text-button" id="cycle" type="button" aria-pressed="false">↻ 自动切换</button><span class="playback-divider"></span><span>点点它们，打个招呼</span></div>
+    <span class="sr-only" id="announcement" role="status" aria-live="polite"></span>
+  </main>
+  <footer><span>独立演示 · 模拟数据</span><span>·</span><a href="https://github.com/rullerzhou-afk/clawd-on-desk" target="_blank" rel="noreferrer">Clawd 动作来源</a></footer>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const $ = id => document.getElementById(id);
+      const motion = matchMedia('(prefers-reduced-motion: reduce)');
+      const scenes = {
+        idle: { title:'休息一下', speed:'86', unit:'次 / 今日', left:'今天也配合得不错', right:'12.4k tokens', copy:'没有请求的时候，就一起打个盹。', greeting:'嘘，刚才梦到小鱼了。', duration:16000 },
+        work: { title:'deepseek-chat', speed:'58', rate:58, unit:'tok/s', left:'正在生成 · 1 个请求', copy:'你写你的，我们忙我们的。', greeting:'收到，马上接着干！', duration:16000 },
+        surf: { title:'3 个请求，一起出发', speed:'142', rate:142, unit:'tok/s', left:'DeepSeek · Claude · Gemini', copy:'你负责出主意，我们负责乘风破浪。', greeting:'站稳啦，出发！', duration:12000 },
+        retry: { title:'正在切换备用渠道', speed:'↻', unit:'重试中', left:'当前渠道响应超时', right:'准备连接渠道 B', copy:'别着急，我们换条路试试。', greeting:'收到，正在修，马上就好。', reaction:'notice', duration:12000 },
+        error: { title:'上游暂时不可用', speed:'!', unit:'熔断中', left:'连续请求失败', right:'等待渠道恢复', copy:'先歇一会儿，让小侦探查个明白。', greeting:'还在排查，有消息就告诉你。', reaction:'notice', duration:16000 },
+        done: { title:'任务完成', speed:'✓', unit:'已完成', left:'这一程，顺利抵达', copy:'好耶！庆祝一下，再一起打个盹。', greeting:'配合愉快，下次还一起！', reaction:'notice', duration:2800, autoNext:'idle' },
+      };
+      const order = Object.keys(scenes);
+      let mode = 'idle', paused = motion.matches, cycling = false;
+      let sceneElapsed = 0, tokenCount = 1024, greetingElapsed = null, previousTime = null, readoutElapsed = 0;
+      let rafId = null, playTime = 0, shapeElapsed = 0;
+      const whales = [...document.querySelectorAll('.whale-outline')].map(path => ({
+        path, points:JSON.parse(path.dataset.points), pivot:path.dataset.pivot.split(',').map(Number), scene:path.closest('.scene').dataset.scene,
+      }));
+
+      // Deform one continuous outline near the tail root; detached layers leave
+      // visible cracks on a transparent background. White face/belly stay put.
+      function moveTails() {
+        for(const whale of whales) {
+          if(whale.scene !== mode) continue;
+          const t=playTime/1000, [px,py]=whale.pivot;
+          const phase=(t%6.8)/6.8;
+          const amplitude = mode==='surf' ? .085 : mode==='error' ? .006 : mode==='retry' ? .015 : .045;
+          const angle=mode==='idle' ? (phase > .65 ? Math.sin((phase-.65)/.35*Math.PI*2)*.045 : 0) : Math.sin(t*Math.PI*2/(mode==='surf'?1.45:2.8))*amplitude;
+          const smooth = value => { const n=Math.max(0,Math.min(1,value)); return n*n*(3-2*n); };
+          const loops=whale.points.map(points=>points.map(([x,y])=>{
+            const weight=smooth((x-(px-24))/20)*smooth((py+8-y)/24), a=angle*weight;
+            return [px+(x-px)*Math.cos(a)-(y-py)*Math.sin(a),py+(x-px)*Math.sin(a)+(y-py)*Math.cos(a)];
+          }));
+          const n=value=>Number(value.toFixed(2));
+          whale.path.setAttribute('d',loops.map(points=>points.map((p,i)=>{
+            const prev=points[(i+points.length-1)%points.length], next=points[(i+1)%points.length];
+            const a=Math.min(.25,.7/Math.hypot(p[0]-prev[0],p[1]-prev[1])), b=Math.min(.25,.7/Math.hypot(next[0]-p[0],next[1]-p[1]));
+            return `${i?'L':'M'}${n(p[0]+(prev[0]-p[0])*a)} ${n(p[1]+(prev[1]-p[1])*a)}Q${n(p[0])} ${n(p[1])} ${n(p[0]+(next[0]-p[0])*b)} ${n(p[1]+(next[1]-p[1])*b)}`;
+          }).join('')+'Z').join(''));
+        }
+      }
+
+      function announce(message) { $('announcement').textContent = message; }
+      function renderReadout() {
+        const scene = scenes[mode];
+        $('model').textContent = scene.title;
+        $('speed').textContent = scene.speed;
+        $('speed-unit').textContent = scene.unit;
+        $('meta-left').textContent = scene.left;
+        $('meta-right').textContent = scene.right || `${Math.floor(tokenCount).toLocaleString('en-US')} tokens`;
+        $('scene-copy').textContent = scene.copy;
+      }
+      function stopGreeting() { greetingElapsed = null; root.dataset.greeting = 'false'; }
+      function setScene(next, manual = true) {
+        if (!scenes[next]) return;
+        if (manual) { cycling = false; $('cycle').setAttribute('aria-pressed','false'); }
+        mode = next; root.dataset.scene = next; sceneElapsed = 0; previousTime = null;
+        if (scenes[next].rate) tokenCount = 1024;
+        stopGreeting();
+        document.querySelectorAll('.scene').forEach(el => el.classList.toggle('is-active',el.dataset.scene === next));
+        // Restart finite entrance/completion actions when re-entering a scene.
+        // Leave the opacity transition alone so the scene change still blends.
+        document.querySelector('.scene.is-active').getAnimations({subtree:true}).forEach(animation=>{
+          if (animation instanceof CSSAnimation) animation.currentTime = 0;
+        });
+        document.querySelectorAll('[data-mode]').forEach(el => el.setAttribute('aria-pressed',String(el.dataset.mode === next)));
+        renderReadout(); announce(`${scenes[next].title}，${paused ? '动画已暂停' : '正在播放'}`);
+      }
+      function setPaused(value) {
+        paused = value; root.dataset.paused = String(value); previousTime = null;
+        const label = value ? '继续播放' : '暂停动画';
+        $('pause').setAttribute('aria-label',label); $('pause').title = label;
+        $('pause').setAttribute('aria-pressed',String(value));
+        $('pause-icon').setAttribute('d',value ? 'M8 5l11 7-11 7Z' : 'M8 5v14M16 5v14');
+        announce(value ? '动画已暂停' : '继续播放');
+      }
+      function greet() {
+        if (paused) { announce('动画已暂停，继续播放后可以打招呼'); return; }
+        greetingElapsed = 0; root.dataset.greeting = 'true'; root.dataset.reaction = scenes[mode].reaction || 'cheer'; previousTime = null;
+        $('greeting-caption').textContent = scenes[mode].greeting;
+        document.querySelector('.scene.is-active .hello-clawd')?.getAnimations({subtree:true}).forEach(animation=>{ animation.currentTime = 0; });
+        announce(scenes[mode].greeting);
+      }
+      function tick(time) {
+        rafId = null;
+        // Use elapsed time, not a capped frame delta: a low frame rate must not
+        // stretch a two-second greeting or the 12–16 second scene timer.
+        // Background tabs reset previousTime in visibilitychange instead.
+        const dt = previousTime === null ? 0 : Math.max(0, time - previousTime);
+        previousTime = time;
+        if (!paused) {
+          playTime += dt; shapeElapsed += dt;
+          if(shapeElapsed >= 40) { shapeElapsed=0; moveTails(); }
+          sceneElapsed += dt;
+          if (scenes[mode].rate) tokenCount += scenes[mode].rate * dt / 1000;
+          if (greetingElapsed !== null) { greetingElapsed += dt; if (greetingElapsed >= 2100) stopGreeting(); }
+          if ((cycling || scenes[mode].autoNext) && sceneElapsed >= scenes[mode].duration) setScene(scenes[mode].autoNext || order[(order.indexOf(mode)+1)%order.length],false);
+          readoutElapsed += dt;
+          if (readoutElapsed >= 160) { readoutElapsed = 0; if (scenes[mode].rate) $('meta-right').textContent = `${Math.floor(tokenCount).toLocaleString('en-US')} tokens`; }
+        }
+        if (!document.hidden) rafId = requestAnimationFrame(tick);
+      }
+      document.querySelectorAll('[data-mode]').forEach(button=>button.addEventListener('click',()=>setScene(button.dataset.mode)));
+      $('pet').addEventListener('click',greet);
+      $('pause').addEventListener('click',()=>setPaused(!paused));
+      $('theme').addEventListener('click',()=>{
+        const light = root.dataset.theme !== 'light'; root.dataset.theme = light ? 'light' : 'dark';
+        const label = light ? '切换到深色' : '切换到浅色'; $('theme').setAttribute('aria-label',label); $('theme').title = label; $('theme').setAttribute('aria-pressed',String(light));
+      });
+      $('size').addEventListener('click',()=>{
+        const large = root.dataset.size !== 'large'; root.dataset.size = large ? 'large' : 'normal';
+        $('size').setAttribute('aria-pressed',String(large)); const label = large ? '恢复实际尺寸' : '放大查看'; $('size').setAttribute('aria-label',label); $('size').title = label;
+      });
+      $('cycle').addEventListener('click',()=>{ cycling = !cycling; sceneElapsed = 0; previousTime = null; $('cycle').setAttribute('aria-pressed',String(cycling)); announce(cycling ? '自动切换已开启，普通场景停留 12 至 16 秒，完成后短暂庆祝并回到待机' : '自动切换已关闭'); });
+      document.addEventListener('keydown',event=>{
+        if (event.ctrlKey || event.metaKey || event.altKey || event.target.isContentEditable) return;
+        if (/^[1-6]$/.test(event.key)) setScene(order[Number(event.key)-1]);
+      });
+      motion.addEventListener('change',event=>{ if(event.matches) setPaused(true); });
+      document.addEventListener('visibilitychange',()=>{
+        if (document.hidden) { if(rafId !== null) cancelAnimationFrame(rafId); rafId = null; root.dataset.paused='true'; }
+        else { root.dataset.paused=String(paused); previousTime = null; if(rafId === null) rafId=requestAnimationFrame(tick); }
+      });
+      setPaused(paused); renderReadout(); rafId=requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>

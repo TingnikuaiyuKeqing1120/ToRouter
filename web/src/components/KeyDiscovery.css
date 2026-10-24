@@ -1,0 +1,60 @@
+.modal.key-discovery { max-width: 70rem; height: min(88dvh, 850px); max-height: 88dvh; overflow: hidden; }
+.modal.key-discovery-source-step { height: fit-content; }
+.key-discovery-source-step .key-discovery-body { min-height: 168px; max-height: 55dvh; }
+.key-discovery .modal-content { height: 100%; min-height: 0; display: flex; flex-direction: column; padding: 0; }
+.key-discovery-source-step .modal-content { height: auto; }
+.key-discovery .modal-heading { flex-shrink: 0; margin: 0; padding: 18px 24px 10px; align-items: center; }
+.key-discovery .modal-heading .btn { margin: 0; }
+.key-discovery-steps { display: flex; align-items: center; gap: 12px; flex-shrink: 0; padding: 0 24px 12px; font-size: 12px; color: var(--color-text-secondary); }
+.key-discovery-steps .is-current { color: var(--brand-blue); font-weight: 600; }
+.key-discovery-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0; min-height: 54px; padding: 8px 24px; border-block: 1px solid var(--color-border); background: var(--color-surface-2); font-size: 13px; color: var(--color-text-secondary); }
+.key-discovery-selection { display: flex; align-items: center; gap: 4px; }
+.key-discovery .btn { font-size: 13px; min-height: 36px; }
+.key-discovery-body { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px; }
+.key-discovery-body > [role=alert] { margin-bottom: 16px; }
+.key-discovery-tools { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 14px; }
+.key-discovery-tool { position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; min-height: 112px; padding: 16px 8px; border: 1px solid var(--color-border); border-radius: 12px; cursor: pointer; color: var(--color-text-secondary); font-size: 13px; background: var(--color-surface-2); }
+.key-discovery-tool input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.key-discovery-tool.is-selected { color: var(--color-text-primary); border-color: var(--brand-blue); box-shadow: inset 0 0 0 1px var(--brand-blue); background: color-mix(in srgb, var(--brand-blue) 8%, var(--color-surface-1)); }
+.key-discovery-tool:has(input:focus-visible) { outline: 2px solid var(--brand-blue); outline-offset: 3px; }
+.key-discovery-tool:has(input:disabled) { cursor: default; }
+.key-discovery-tool-check { position: absolute; right: 8px; top: 8px; color: var(--brand-blue); }
+.key-discovery-progress { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; min-height: 240px; color: var(--color-text-secondary); font-size: 13px; }
+.key-discovery-progress strong { font-weight: 500; color: var(--color-text-primary); }
+.key-discovery-progress progress { width: min(280px, 85%); height: 6px; accent-color: var(--brand-blue); }
+.key-discovery-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
+.key-discovery-card { min-width: 0; border: 1px solid var(--color-border-strong); border-radius: 12px; padding: 14px; background: var(--color-surface-1); }
+.key-discovery-card header { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.key-discovery-card header > input { flex-shrink: 0; }
+.key-discovery-card header strong { min-width: 0; overflow-wrap: anywhere; font-size: 13px; font-weight: 600; line-height: 1.5; }
+.key-discovery-provider { display: grid; place-items: center; flex-shrink: 0; width: 34px; height: 34px; border-radius: 8px; cursor: pointer; background: var(--color-surface-2); }
+.key-discovery-provider:hover { box-shadow: 0 0 0 1px var(--brand-blue); }
+.key-discovery-formats { display: flex; flex-wrap: wrap; gap: 4px 8px; margin: 8px 0 10px 24px; color: var(--color-text-secondary); font-size: 11px; line-height: 1.5; }
+.key-discovery-formats > span { border-radius: 4px; padding: 2px 5px; background: var(--color-surface-2); }
+.key-discovery-credential { display: flex; align-items: center; gap: 8px; min-height: 42px; border-top: 1px solid var(--color-border); cursor: pointer; }
+.key-discovery-credential input { flex-shrink: 0; }
+.key-discovery-credential code { min-width: 0; overflow-wrap: anywhere; font-size: 12px; }
+.key-discovery-origins { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-left: auto; }
+.key-discovery-origins > span { display: grid; place-items: center; }
+.key-discovery-kind { font-size: 10px; color: var(--color-text-secondary); white-space: nowrap; }
+.key-discovery-copy { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; margin-top: 10px; border-top: 1px solid var(--color-border); padding-top: 10px; }
+.key-discovery-copy p { color: var(--color-text-secondary); font-size: 11px; line-height: 1.5; }
+.key-discovery-copy .btn { font-size: 12px; min-height: 32px; }
+.key-discovery-scan-notes, .key-discovery-import-result { margin-bottom: 14px; color: var(--color-text-secondary); font-size: 12px; line-height: 1.6; }
+.key-discovery-empty { padding: 36px 0; text-align: center; color: var(--color-text-secondary); font-size: 13px; }
+.key-discovery .key-discovery-footer { flex-shrink: 0; align-items: center; margin: 0; padding: 12px 24px; background: var(--color-surface-1); }
+.key-discovery-footer > .btn:first-child { margin-right: auto; }
+.key-discovery-count { color: var(--color-text-secondary); font-size: 12px; }
+@media(max-width: 640px) {
+  .modal.key-discovery { inset: 0; margin: 0; width: 100%; max-width: 100%; height: 100dvh; max-height: 100dvh; border-radius: 0; }
+  .key-discovery .modal-heading { padding: 14px 16px 8px; }
+  .key-discovery-steps { padding: 0 16px 10px; }
+  .key-discovery-toolbar { padding: 8px 16px; }
+  .key-discovery-body { padding: 16px; }
+  .key-discovery-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .key-discovery-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .key-discovery-tool { min-height: 98px; font-size: 12px; }
+  .key-discovery .key-discovery-footer { padding: 12px 16px; flex-wrap: wrap; gap: 8px; }
+  .key-discovery-count { flex-basis: 100%; order: -1; text-align: right; }
+  .key-discovery .btn { min-height: 40px; }
+}

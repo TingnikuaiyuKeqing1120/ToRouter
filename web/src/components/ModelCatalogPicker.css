@@ -1,0 +1,12 @@
+.model-catalog-picker { min-width: 0; }
+.model-catalog-search { position: relative; }
+.model-catalog-search > svg { position: absolute; left: 9px; top: 12px; pointer-events: none; color: var(--color-text-secondary); }
+.model-catalog-search .input { width: 100%; min-height: 38px; padding-left: 30px; font-size: 12px; }
+.model-catalog-picker > small { display: block; margin-top: 4px; overflow-wrap: anywhere; font-size: 12px; color: var(--color-text-secondary); }
+.model-catalog-options { z-index: 100; overflow-y: auto; padding: 4px; border: 1px solid var(--color-border); border-radius: 10px; background: var(--color-surface-1); box-shadow: 0 12px 32px #0003; }
+.model-catalog-options > button { display: flex; flex-direction: column; width: 100%; gap: 3px; min-height: 58px; padding: 9px; border-radius: 6px; text-align: left; overflow-wrap: anywhere; font-size: 12px; color: var(--color-text-primary); }
+.model-catalog-options > button:hover, .model-catalog-options > button.active { background: var(--color-surface-2); }
+.model-catalog-options > button[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }
+.model-catalog-options span, .model-catalog-options small, .model-catalog-options p { color: var(--color-text-secondary); }
+.model-catalog-options p { padding: 12px; font-size: 13px; }
+@media (max-width: 600px) { .model-catalog-search .input { min-height: 44px; font-size: 16px; } .model-catalog-search > svg { top: 15px; } }

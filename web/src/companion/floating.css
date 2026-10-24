@@ -1,0 +1,67 @@
+/* FloatingPet Desktop & Transparent Styles */
+.pet-drag-region {
+  --wails-draggable: drag;
+  -webkit-app-region: drag;
+}
+
+.pet-no-drag {
+  --wails-draggable: no-drag;
+  -webkit-app-region: no-drag;
+}
+
+.pet-glass-pill {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.pet-glass-dock {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background-color: rgba(2, 6, 23, 0.94);
+}
+
+/* Ensure completely transparent canvas when on pet view */
+html.pet-mode,
+html.pet-mode body,
+body.pet-mode,
+html.pet-mode #root,
+body.pet-mode #root {
+  background: transparent !important;
+  background-color: transparent !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: auto !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+html.native-pet-mode,
+html.native-pet-mode body,
+html.native-pet-mode #root { overflow: hidden !important; }
+
+/* Eliminate mascot focus rings and borders in desktop pet */
+.companion-stage .stage-button,
+.companion-stage .stage-button:focus,
+.companion-stage .stage-button:focus-visible,
+.companion-stage .stage-button:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Light theme adaptations for floating pills and dock */
+html.light .pet-glass-pill,
+[data-theme="light"] .pet-glass-pill {
+  background-color: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #1e293b;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+html.light .pet-glass-dock,
+[data-theme="light"] .pet-glass-dock {
+  background-color: rgba(255, 255, 255, 0.96);
+  border-color: rgba(0, 0, 0, 0.14);
+  color: #0f172a;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.14);
+}

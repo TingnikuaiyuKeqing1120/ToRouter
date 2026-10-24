@@ -1,0 +1,65 @@
+.usage-chart-panel { min-width: 0; padding: 20px; }
+.usage-chart-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.usage-chart-header h2 { margin: 0; font-size: 15px; font-weight: 650; color: var(--color-text-primary); }
+.usage-chart-switch { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--color-border); border-radius: 9px; background: var(--color-surface-2); }
+.usage-chart-switch button, .usage-chart-dimensions button { border: 0; border-radius: 6px; min-height: 32px; padding: 5px 9px; font-size: 12px; white-space: nowrap; color: var(--color-text-secondary); background: transparent; cursor: pointer; }
+.usage-chart-switch button[aria-pressed=true] { color: var(--usage-accent, var(--brand-blue)); background: var(--color-surface-1); box-shadow: 0 1px 3px rgb(0 0 0 / 8%); }
+.usage-chart-switch button:focus-visible, .usage-chart-dimensions button:focus-visible { outline: 2px solid var(--usage-accent, var(--brand-blue)); outline-offset: 2px; }
+.usage-chart-dimensions { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.usage-chart-dimensions button { padding: 3px 7px; }
+.usage-chart-dimensions button[aria-pressed=true] { color: var(--usage-accent, var(--brand-blue)); background: color-mix(in srgb, var(--usage-accent, var(--brand-blue)) 10%, transparent); }
+.usage-trend-canvas, .usage-histogram { width: 100%; min-width: 0; }
+.usage-chart-legend { display: flex; gap: 8px 18px; justify-content: center; flex-wrap: wrap; margin: 12px 0 0; padding: 0; list-style: none; }
+.usage-chart-legend li { display: flex; align-items: center; gap: 6px; max-width: 100%; color: var(--color-text-secondary); font-size: 12px; }
+.usage-chart-legend span { overflow-wrap: anywhere; }
+.usage-chart-legend i, .usage-composition-list i, .usage-token-values i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex: 0 0 8px; }
+.usage-chart-note { margin: 13px 0 0; color: var(--color-text-secondary); font-size: 12px; line-height: 1.65; }
+.usage-chart-unit { color: var(--color-text-secondary); font-size: 12px; }
+.usage-chart-data { margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: 12px; }
+.usage-chart-data summary { min-height: 32px; line-height: 32px; cursor: pointer; width: fit-content; }
+.usage-chart-table-scroll { overflow-x: auto; max-height: 300px; margin-top: 10px; }
+.usage-chart-data table { width: 100%; border-collapse: collapse; font-size: 13px; white-space: nowrap; }
+.usage-chart-data caption { text-align: left; padding: 4px 8px 10px; color: var(--color-text-secondary); }
+.usage-chart-data th, .usage-chart-data td { padding: 8px; text-align: right; border-bottom: 1px solid var(--color-border); font-variant-numeric: tabular-nums; }
+.usage-chart-data th:first-child { text-align: left; }
+.usage-composition-panel { container-type: inline-size; container-name: usage-composition; }
+.usage-composition-body { display: flex; gap: 18px; align-items: center; min-width: 0; }
+.usage-donut { position: relative; width: 190px; min-width: 190px; }
+.usage-donut-total { position: absolute; pointer-events: none; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.usage-donut-total strong { pointer-events: auto; color: var(--color-text-primary); font-size: 17px; max-width: 108px; overflow-wrap: anywhere; text-align: center; }
+.usage-donut-total span { font-size: 12px; color: var(--color-text-secondary); }
+.usage-composition-list { flex: 1; min-width: 0; padding: 0; margin: 0; list-style: none; display: grid; gap: 13px; }
+.usage-composition-list li { display: grid; align-items: center; grid-template-columns: 8px minmax(9ch, 1fr) minmax(0, max-content) 44px; gap: 8px; font-size: 13px; }
+.usage-composition-name { color: var(--color-text-secondary); overflow-wrap: anywhere; }
+.usage-composition-value { min-width: 0; max-width: 160px; color: var(--color-text-primary); text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.usage-composition-percent { color: var(--color-text-secondary); text-align: right; font-variant-numeric: tabular-nums; }
+.usage-chart-zero { min-height: 160px; width: 190px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; gap: 8px; flex-direction: column; color: var(--color-text-secondary); font-size: 12px; text-align: center; }
+.usage-chart-zero strong { font-size: 24px; color: var(--color-text-primary); }
+.usage-bucket-values { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.usage-bucket-values li { display: flex; gap: 10px; justify-content: space-between; }
+.usage-bucket-values strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.usage-token-bar { overflow: hidden; display: flex; height: 13px; border-radius: 5px; background: var(--color-surface-2); }
+.usage-token-bar span { height: 100%; }
+.usage-token-values { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 10px; }
+.usage-token-values li { display: grid; grid-template-columns: 8px minmax(0, 1fr) auto 45px; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary); }
+.usage-token-values strong { font-weight: 500; font-variant-numeric: tabular-nums; }
+.usage-token-values li > span:last-child { text-align: right; color: var(--color-text-secondary); }
+@container usage-composition (max-width: 560px) {
+  .usage-composition-body { flex-direction: column; gap: 8px; }
+  .usage-composition-list { width: 100%; }
+  .usage-chart-zero { min-height: 110px; }
+}
+@container usage-composition (max-width: 300px) {
+  .usage-composition-list li { grid-template-columns: 8px minmax(9ch, 1fr) 44px; gap: 5px 8px; }
+  .usage-composition-name { grid-column: 2 / -1; }
+  .usage-composition-value { grid-column: 2; max-width: none; text-align: left; }
+}
+@media (max-width: 760px) {
+  .usage-chart-panel { padding: 16px; }
+}
+@media (max-width: 420px) {
+  .usage-chart-panel { padding: 12px; }
+  .usage-chart-switch button { padding: 5px 7px; }
+  .usage-token-values li { grid-template-columns: 8px minmax(0, 1fr) auto; }
+  .usage-token-values li > span:last-child { display: none; }
+}

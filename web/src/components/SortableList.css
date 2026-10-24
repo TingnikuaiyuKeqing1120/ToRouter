@@ -1,0 +1,15 @@
+[data-sortable-list][data-sortable-active] > [data-sortable-item] {
+  transform: translate3d(var(--sortable-x, 0px), var(--sortable-y, 0px), 0);
+  transition: transform 150ms ease;
+  will-change: transform;
+}
+[data-sortable-state="placeholder"] {
+  opacity: 0.22;
+  outline: 2px dashed var(--accent, #6d8ef7);
+  outline-offset: -2px;
+  pointer-events: none;
+}
+.sortable-floating { cursor: grabbing; pointer-events: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  [data-sortable-list][data-sortable-active] > [data-sortable-item] { transition: none; }
+}
