@@ -4,6 +4,10 @@
   <p><strong>面向个人的本地模型路由网关，统一管理模型接入、智能路由与用量支出。</strong></p>
 
   <p>
+    <strong><a href="README_en.md">English</a></strong> • <strong><a href="README.md">中文简体</a></strong>
+  </p>
+
+  <p>
     <a href="https://github.com/TingnikuaiyuKeqing1120/ToRouter/releases/latest"><img src="https://img.shields.io/github/v/release/TingnikuaiyuKeqing1120/ToRouter?color=blue&label=Release" alt="Release"></a>
     <img src="https://img.shields.io/badge/Platform-Windows%20x64-lightgrey" alt="Platform">
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green" alt="License"></a>

@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parent.parent
 # Exact root files allowed in public repository
 ROOT_FILES = [
     "README.md",
+    "README_en.md",
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
     "go.mod",
