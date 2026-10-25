@@ -6,6 +6,8 @@ import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
 import { useSortableList } from '../hooks/useSortableList';
 import { Button, ErrorBox, Modal } from '../components/ui';
 import { TagBadge } from '../components/TagBadge';
+import { ModelTagWorkbench } from '../components/ModelTagWorkbench';
+import { managementTarget } from '../services/managementLinks';
 import type { TagGroupWithTags, Tag, TagReferences } from '../types';
 import './Tags.css';
 
@@ -89,6 +91,19 @@ export default function Tags() {
     },
   });
   async function closeEditor() { if (await canLeave()) { setEditingGroup(null); setEditingTag(null); } }
+  const [activeView, setActiveView] = useState<'definitions' | 'models'>(() => {
+    const target = managementTarget();
+    return target.channelID != null || !!target.model ? 'models' : 'definitions';
+  });
+
+  async function switchView(targetView: 'definitions' | 'models') {
+    if (activeView === targetView) return;
+    if (await canLeave()) {
+      setEditingGroup(null);
+      setEditingTag(null);
+      setActiveView(targetView);
+    }
+  }
   async function fetchGroups() {
     try { setGroups(await api<TagGroupWithTags[]>('/tag-groups')); setError(''); }
     catch (err) { setError('读取标签失败：' + errorMessage(err)); }
@@ -178,14 +193,64 @@ export default function Tags() {
   const tagCount = filteredGroups.reduce((count, group) => count + group.tags.length, 0);
 
   return <div className="tags-page">
-    <fieldset disabled={saving || ordering} className="tags-manager">
-      <header className="tags-toolbar">
-        <div><h1 className="text-xl font-bold">标签配置</h1><p className="tags-subtitle">管理标签组、标签与显示顺序</p></div>
-        <div className="tags-actions">
-          <details className="tags-more"><summary>更多操作</summary><button type="button" className="btn btn-secondary" onClick={handleResetBuiltin}><RotateCcw size={15} />重置内置预设</button></details>
-          <button type="button" className="btn btn-primary" onClick={() => openGroup({ id: '', name: '', description: '', sort_order: Math.max(0, ...groups.map(group => group.sort_order)) + 1, isNew: true })}><Plus size={16} />新建标签组</button>
-        </div>
-      </header>
+    <header className="tags-toolbar">
+      <div className="tags-toolbar-title">
+        <h1 className="text-xl font-bold">标签配置</h1>
+        <p className="tags-subtitle">
+          {activeView === 'definitions' ? '管理标签组、标签与显示顺序' : '管理已启用上游模型的标签分配'}
+        </p>
+      </div>
+      <div className="segmented" role="tablist" aria-label="标签视图">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeView === 'definitions'}
+          className={activeView === 'definitions' ? 'active' : ''}
+          onClick={() => void switchView('definitions')}
+        >
+          标签组管理
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeView === 'models'}
+          className={activeView === 'models' ? 'active' : ''}
+          onClick={() => void switchView('models')}
+        >
+          模型标签配置
+        </button>
+      </div>
+      <div className="tags-actions">
+        {activeView === 'definitions' && (
+          <>
+            <details className="tags-more">
+              <summary>更多操作</summary>
+              <button type="button" className="btn btn-secondary" onClick={handleResetBuiltin}>
+                <RotateCcw size={15} />重置内置预设
+              </button>
+            </details>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() =>
+                openGroup({
+                  id: '',
+                  name: '',
+                  description: '',
+                  sort_order: Math.max(0, ...groups.map(group => group.sort_order)) + 1,
+                  isNew: true,
+                })
+              }
+            >
+              <Plus size={16} />新建标签组
+            </button>
+          </>
+        )}
+      </div>
+    </header>
+
+    {activeView === 'definitions' ? (
+      <fieldset disabled={saving || ordering} className="tags-manager">
       <div className="tags-searchbar">
         <div className="tags-search"><Search size={16} /><input aria-label="搜索标签和标签组" placeholder="搜索标签名称、ID 或描述..." value={search} onChange={event => setSearch(event.target.value)} />{search && <button type="button" className="tags-icon" aria-label="清除搜索" onClick={() => setSearch('')}><X size={16} /></button>}</div>
         <span className="tags-count" role="status">{filteredGroups.length} 个标签组 · {tagCount} 个标签{query ? '匹配' : ''}</span>
@@ -223,6 +288,9 @@ export default function Tags() {
         {!filteredGroups.length && <div className="tags-empty">{query ? <><p>没有匹配的标签或标签组</p><button type="button" className="btn btn-secondary" onClick={() => setSearch('')}>清除搜索</button></> : <p>尚未创建标签组，点击“新建标签组”开始。</p>}</div>}
       </div>}
     </fieldset>
+    ) : (
+      <ModelTagWorkbench />
+    )}
       {/* 编辑组弹窗 */}
       {editingGroup && (
         <Modal title={editingGroup?.isNew ? '新建标签组' : '编辑标签组'} onClose={closeEditor} busy={saving}>

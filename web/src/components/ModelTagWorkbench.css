@@ -1,0 +1,50 @@
+.model-tags-workbench-view { display: grid; gap: 14px; min-width: 0; }
+.model-tags-searchbar { gap: 12px; }
+.model-tags-search-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-left: auto; }
+.model-tags-workbench { min-width: 0; overflow: hidden; }
+.model-tags-show-disabled { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--color-text-secondary); cursor: pointer; user-select: none; }
+.model-tags-show-disabled input { accent-color: var(--brand-blue); }
+.model-tags-channels { padding: 12px 16px; border-bottom: 1px solid var(--color-border); }
+.model-tags-channels summary { width: fit-content; min-height: 28px; padding: 2px 0; font-size: 13px; font-weight: 500; color: var(--color-text-secondary); cursor: pointer; }
+.model-tags-channel-options { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-top: 8px; }
+.model-tags-channel-options > label { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; min-width: 0; max-width: 100%; cursor: pointer; font-size: 13px; }
+.model-tags-channel-options > label span { overflow-wrap: anywhere; }
+.model-tags-table { table-layout: fixed; min-width: 960px; font-size: 13px; }
+.model-tags-table th { padding: 8px 12px; font-size: 12px; letter-spacing: 0; text-transform: none; color: var(--color-text-secondary); }
+.model-tags-table td { padding: 8px 12px; overflow-wrap: anywhere; vertical-align: middle; }
+.model-tags-table th:nth-child(2) { width: 14%; }
+.model-tags-table th:nth-child(3) { width: 22%; }
+.model-tags-table th:nth-child(4) { width: 52%; }
+.model-tags-table th:last-child { width: 88px; text-align: right; }
+.model-tags-table td:last-child { text-align: right; }
+.model-tags-selection { width: 44px; padding: 4px; text-align: center; }
+.model-tags-selection label { display: flex; align-items: center; justify-content: center; min-height: 40px; cursor: pointer; }
+.model-tags-channel-name, .model-tags-model-id { color: var(--color-text-primary); }
+.model-tags-model-id { font-family: var(--font-mono, ui-monospace, monospace); }
+.model-tags-disabled-badge { font-size: 11px; color: var(--color-text-muted); margin-left: 6px; }
+.model-tags-summary { display: flex; flex-direction: column; gap: 6px; }
+.model-tag-group-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.model-tag-group-label { color: var(--color-text-secondary); font-size: 11px; flex-shrink: 0; min-width: 65px; }
+.model-tag-badges { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.model-tag-none { font-size: 11px; color: var(--color-text-muted); }
+.model-tag-source-badge { font-size: 10px; line-height: 1; padding: 2px 5px; border-radius: 4px; font-weight: 500; }
+.model-tag-source-badge.independent { background: var(--color-surface-2); color: var(--color-text-primary); border: 1px solid var(--color-border); }
+.model-tag-source-badge.follow { background: transparent; color: var(--color-text-muted); }
+.model-tags-table tr[data-selected="true"] { background: var(--color-surface-2); }
+.model-tag-editor-dialog { max-width: 680px; }
+.model-tag-editor-body { display: flex; flex-direction: column; gap: 16px; padding: 0 4px; max-height: 65vh; overflow-y: auto; }
+.model-tag-group-edit-section { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; border-bottom: 1px solid var(--color-border); }
+.model-tag-group-edit-section:last-child { border-bottom: none; padding-bottom: 0; }
+.model-tag-group-edit-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.model-tag-group-edit-header strong { font-size: 13px; color: var(--color-text-primary); }
+.model-tag-group-edit-source { font-size: 12px; color: var(--color-text-secondary); }
+.model-tag-bulk-dialog { max-width: 580px; }
+.model-tag-bulk-body { display: flex; flex-direction: column; gap: 14px; }
+.model-tag-bulk-field { display: flex; flex-direction: column; gap: 6px; }
+.model-tag-bulk-field label { font-size: 12px; font-weight: 500; color: var(--color-text-secondary); }
+@media (max-width: 768px) {
+  .model-tags-search-actions { margin-left: 0; width: 100%; justify-content: space-between; }
+  .model-tags-channels { padding: 10px 12px; }
+  .model-tags-channel-options { column-gap: 12px; }
+  .model-tags-channel-options > label, .model-tags-channels summary, .model-tags-selection label, .model-tags-table .btn { min-height: 44px; }
+}

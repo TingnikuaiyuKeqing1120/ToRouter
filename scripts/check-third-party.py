@@ -248,7 +248,7 @@ def generate():
                             'web/src/assets/provider-icons/catalog.json']},
                 'unresolved': [
                     'User-supplied blue-whale SVGs are described by the user as online circulating derivative artwork based on the official DeepSeek logo; derivative author, original URL and redistribution permission remain unknown.',
-                    'Project-wide code is licensed under the MIT License (see root LICENSE). Third-party notices document upstream obligations and AGPL terms for applicable components.',
+                    'No project-wide LICENSE selected. Third-party notices do not license to-router or clear AGPL obligations.',
                     'Research references are documented; a repository-wide copied-code provenance audit has not been performed.',
                     'OS-provided Microsoft WebView2 Runtime is not redistributed by this build; separate redistribution terms must be checked if bundled later.'
                 ]}

@@ -306,4 +306,35 @@ describe('Tags Page Management', () => {
       expect(resetCall).toBeTruthy();
     });
   });
+
+  it('switches between tag definitions and model tag workbench tabs', async () => {
+    fetcher.mockImplementation((url: string, _init?: RequestInit) => {
+      if (url === '/api/tag-groups') return Promise.resolve(json(mockGroups));
+      if (url === '/api/channels') return Promise.resolve(json([{ id: 1, name: '测试渠道', models: ['gpt-4'], enabled: true }]));
+      return Promise.resolve(json([]));
+    });
+
+    render(<Tags />);
+    await screen.findByText('标签配置');
+
+    // Initially on tag definitions tab
+    expect(screen.getByRole('button', { name: '新建标签组' })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: '标签组管理' }).getAttribute('aria-selected')).toBe('true');
+
+    // Switch to model tag workbench tab
+    fireEvent.click(screen.getByRole('tab', { name: '模型标签配置' }));
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: '模型标签配置' }).getAttribute('aria-selected')).toBe('true');
+    });
+    expect(await screen.findByRole('cell', { name: '测试渠道' })).toBeTruthy();
+    expect(screen.getByText('gpt-4')).toBeTruthy();
+    expect(screen.queryByRole('button', { name: '新建标签组' })).toBeNull();
+
+    // Switch back
+    fireEvent.click(screen.getByRole('tab', { name: '标签组管理' }));
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: '标签组管理' }).getAttribute('aria-selected')).toBe('true');
+    });
+    expect(screen.getByRole('button', { name: '新建标签组' })).toBeTruthy();
+  });
 });

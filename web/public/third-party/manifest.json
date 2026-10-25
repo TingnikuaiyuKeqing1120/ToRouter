@@ -6356,12 +6356,12 @@
     "web/package.json": "44b9e6a73a65783b9863e4d0fa2d01206408aa1bca98658bfd39e1a1619e71db",
     "web/package-lock.json": "f33418ade02f79f8ca35649010a34dd54ac0072a110b37d4ab3c9825ac909d6d",
     "third_party/references.json": "4f8a5db4e88c56dddcabd95c461e14cc87c09904ef9dd5c81a75b5aed466b64a",
-    "scripts/check-third-party.py": "bd66cf5295a8f141f1d9bfcb2bfcd28f111e55a0f546aa20cfdeeabec332f93c",
+    "scripts/check-third-party.py": "6b61e30f614626bbb61a6ab4cc8a7876c74a306a3899a4ea3a2cae73d1970c84",
     "web/src/assets/provider-icons/catalog.json": "9fe22ce2146cef586447300ea4a3140633a96bb90d4d7cd5b17ec23100828495"
   },
   "unresolved": [
     "User-supplied blue-whale SVGs are described by the user as online circulating derivative artwork based on the official DeepSeek logo; derivative author, original URL and redistribution permission remain unknown.",
-    "Project-wide code is licensed under the MIT License (see root LICENSE). Third-party notices document upstream obligations and AGPL terms for applicable components.",
+    "No project-wide LICENSE selected. Third-party notices do not license to-router or clear AGPL obligations.",
     "Research references are documented; a repository-wide copied-code provenance audit has not been performed.",
     "OS-provided Microsoft WebView2 Runtime is not redistributed by this build; separate redistribution terms must be checked if bundled later."
   ]
