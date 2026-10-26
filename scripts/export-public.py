@@ -1,16 +1,19 @@
 """
-Export public repository source tree to a clean destination directory.
-Enforces the whitelist of public sources, removes private documents,
-history, and local artifacts, and verifies privacy compliance.
+Synchronize public sources into an identified public repository candidate.
+Exclude private documents, history and local artifacts from the source;
+preserve the candidate's Git history and local build/key material.
 """
 import argparse
+import json
 import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+INVENTORY = Path(".local/public-export.json")
 
 # Exact root files allowed in public repository
 ROOT_FILES = [
@@ -54,66 +57,153 @@ def ignore_patterns(path, names):
     return ignored
 
 
+def check_path(path: Path):
+    """Reject links before resolving them, including Windows directory junctions."""
+    for item in [*reversed(path.parents), path]:
+        try:
+            info = item.lstat()
+        except FileNotFoundError:
+            continue
+        if item.is_symlink() or getattr(info, "st_file_attributes", 0) & 0x400:
+            raise ValueError("Export paths must not traverse symbolic links or reparse points")
+
+
+def public_path(relative: Path):
+    if any(ignore_patterns("", [part]) for part in relative.parts):
+        return False
+    name = relative.as_posix()
+    return (name in ROOT_FILES or
+            (len(relative.parts) > 1 and relative.parts[0] in [*INCLUDE_DIRS, "web", "test"]) or
+            any(name == allowed or name.startswith(allowed + "/") for allowed in ALLOWED_DOCS))
+
+
+def source_files(root: Path):
+    """Inventory only the public selection; never enter preserved local directories."""
+    files = set()
+
+    def collect(path):
+        check_path(path)
+        if path.is_dir():
+            for child in sorted(path.iterdir()):
+                if not ignore_patterns(path, [child.name]):
+                    collect(child)
+        elif path.is_file():
+            files.add(path.relative_to(root).as_posix())
+        elif path.exists():
+            raise ValueError("Public sources must be regular files or directories")
+
+    for relative in [*ROOT_FILES, *INCLUDE_DIRS, "web", "test", *ALLOWED_DOCS]:
+        collect(root / relative)
+    return files
+
+
+def previous_files(dest: Path):
+    marker = dest / INVENTORY
+    check_path(marker)
+    if marker.exists():
+        try:
+            data = json.loads(marker.read_text(encoding="utf-8"))
+            names = data["files"]
+            if data["format"] != "to-router-public-export-v1" or not isinstance(names, list):
+                raise ValueError()
+            for name in names:
+                path = Path(name)
+                if (not isinstance(name, str) or not path.parts or path.is_absolute() or
+                        ".." in path.parts or "\\" in name or ":" in name or
+                        path.as_posix() != name or not public_path(path)):
+                    raise ValueError()
+            return set(names)
+        except (OSError, ValueError, KeyError, TypeError):
+            raise ValueError("Invalid public export inventory; destination was not changed") from None
+    if not dest.exists() or not any(dest.iterdir()):
+        return set()
+
+    # One-time adoption of the exact old public layout, never a development clone
+    # or an arbitrary populated directory. Local build/key material stays unowned.
+    required = [dest / "go.mod", dest / "scripts/export-public.py"]
+    for path in required:
+        check_path(path)
+    if (not (dest / ".git").exists() or not all(path.is_file() for path in required) or
+            (dest / "go.mod").read_text(encoding="utf-8").splitlines()[:1] != ["module torouter"]):
+        raise ValueError("Nonempty destination is not an identified public export candidate")
+    root_names = {*ROOT_FILES, *INCLUDE_DIRS, "web", "test", "docs"}
+    for child in dest.iterdir():
+        if child.name not in root_names and not ignore_patterns(dest, [child.name]):
+            raise ValueError("Destination contains files outside the public candidate layout")
+    docs = dest / "docs"
+    check_path(docs)
+    if docs.exists():
+        def check_docs(path):
+            check_path(path)
+            name = path.relative_to(dest).as_posix()
+            if any(name == allowed or name.startswith(allowed + "/") for allowed in ALLOWED_DOCS):
+                return
+            if not path.is_dir() or not any(allowed.startswith(name + "/") for allowed in ALLOWED_DOCS):
+                raise ValueError("Destination contains private or unknown documentation")
+            for child in path.iterdir():
+                check_docs(child)
+        check_docs(docs)
+    return source_files(dest)
+
+
 def export(dest_dir: Path):
+    # All validation precedes mkdir, copy and delete. Do not resolve away a link
+    # before checking it, or a seemingly separate target can alias the source.
+    dest_dir = Path(os.path.abspath(dest_dir))
+    check_path(dest_dir)
     dest_dir = dest_dir.resolve()
+    root = ROOT.resolve()
+    if dest_dir.is_relative_to(root) or root.is_relative_to(dest_dir):
+        raise ValueError("Destination must be separate from the source and its ancestors")
+    if dest_dir.exists() and not dest_dir.is_dir():
+        raise ValueError("Destination must be a directory")
+    files = source_files(root)
+    previous = previous_files(dest_dir)
+    for name in files | previous:
+        path = dest_dir / name
+        check_path(path)
+        if path.exists() and not path.is_file():
+            raise ValueError("Public source path conflicts with a destination directory")
+        if name in files and path.exists() and path.stat().st_nlink > 1:
+            raise ValueError("Public source destination must not be a hard-linked file")
+        for parent in path.parents:
+            if parent == dest_dir:
+                break
+            if parent.exists() and not parent.is_dir():
+                raise ValueError("Public source parent conflicts with a destination file")
+        if name in files and name not in previous and path.exists():
+            raise ValueError("New public source conflicts with an unowned destination file")
+    marker = dest_dir / INVENTORY
+    if marker.exists() and not marker.is_file():
+        raise ValueError("Public export inventory must be a regular file")
+    if marker.parent.exists() and not marker.parent.is_dir():
+        raise ValueError("Public export inventory parent must be a directory")
+
     print(f"==> Exporting to: {dest_dir}")
-    if dest_dir.exists():
-        # Check if empty or clean
-        existing = list(dest_dir.iterdir())
-        if existing:
-            print(f"Warning: Destination {dest_dir} contains {len(existing)} items. Cleaning...")
-            for item in existing:
-                if item.name == ".git":
-                    continue
-                if item.is_dir():
-                    shutil.rmtree(item)
-                else:
-                    item.unlink()
-    else:
-        dest_dir.mkdir(parents=True, exist_ok=True)
-
-    # 1. Copy root files
-    print("==> Copying root files...")
-    for filename in ROOT_FILES:
-        src = ROOT / filename
-        if src.exists():
-            shutil.copy2(src, dest_dir / filename)
-            print(f"  + {filename}")
-        else:
-            print(f"  ! Warning: {filename} does not exist in root")
-
-    # 2. Copy standard directories
-    for dir_name in INCLUDE_DIRS:
-        src = ROOT / dir_name
-        dst = dest_dir / dir_name
-        if src.exists():
-            print(f"==> Copying {dir_name}/...")
-            shutil.copytree(src, dst, ignore=ignore_patterns, dirs_exist_ok=True)
-
-    # 3. Copy web (clean copy)
-    print("==> Copying web/...")
-    src_web = ROOT / "web"
-    dst_web = dest_dir / "web"
-    shutil.copytree(src_web, dst_web, ignore=ignore_patterns, dirs_exist_ok=True)
-
-    # 4. Copy test (clean copy)
-    print("==> Copying test/...")
-    src_test = ROOT / "test"
-    dst_test = dest_dir / "test"
-    shutil.copytree(src_test, dst_test, ignore=ignore_patterns, dirs_exist_ok=True)
-
-    # 5. Copy allowed docs files
-    print("==> Copying allowed docs files...")
-    for rel_path in ALLOWED_DOCS:
-        src = ROOT / rel_path
-        dst = dest_dir / rel_path
-        if src.is_dir():
-            shutil.copytree(src, dst, ignore=ignore_patterns, dirs_exist_ok=True)
-            print(f"  + {rel_path}/")
-        elif src.is_file():
-            dst.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, dst)
-            print(f"  + {rel_path}")
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for name in sorted(previous - files):
+        path = dest_dir / name
+        path.unlink(missing_ok=True)
+        # Empty source folders may go; folders containing dependencies/artifacts stay.
+        for parent in path.parents:
+            if parent == dest_dir:
+                break
+            try:
+                parent.rmdir()
+            except OSError:
+                break
+    for name in sorted(files):
+        dst = dest_dir / name
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(root / name, dst)
+    marker.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=marker.parent, delete=False) as output:
+        temporary = Path(output.name)
+        output.write(json.dumps({"format": "to-router-public-export-v1", "files": sorted(files)}, indent=2) + "\n")
+    try:
+        temporary.replace(marker)
+    finally:
+        temporary.unlink(missing_ok=True)
 
     # Ensure git is initialized in destination so git-based checks can run
     git_dir = dest_dir / ".git"
@@ -142,7 +232,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--target", "-t", type=Path, required=True, help="Destination directory for public repo")
     args = parser.parse_args()
-    export(args.target)
+    try:
+        export(args.target)
+    except (ValueError, OSError) as error:
+        parser.exit(1, f"Export refused: {error}\n")
 
 
 if __name__ == "__main__":

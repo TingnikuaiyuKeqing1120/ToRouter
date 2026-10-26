@@ -11,7 +11,7 @@
 
 底部切换六个场景，也可按 `1` 至 `6`。前三个场景点击角色播放短暂庆祝，结束后回到当前动作；重试、故障与完成状态只给气泡回应。右上角可以暂停、放大或切换深浅背景；自动切换时普通场景停留 12–16 秒，完成状态为 2.8 秒。手动切换会停止轮播、取消当前点击反馈，并重新开始目标场景动作。暂停会同时冻结角色动作、蓝鲸轮廓变化、模拟计数和场景计时。系统偏好减少动态效果时默认暂停。
 
-本 HTML 仍是独立视觉原型，读数均为模拟值。正式程序的 `#/hud` 已复用这套动画并接入真实网关请求；使用方法与计量边界见[根 README](../../README.md#桌面伴侣)。此原型不访问路由、数据库或托盘。
+本 HTML 仍是独立视觉原型，读数均为模拟值。正式程序的 `#/hud` 已复用这套动画并接入真实网关请求；入口与宿主依赖见[根 README](../../README.md#多视图切换与系统依赖)，实际验收范围见下方原交付记录。此原型不访问路由、数据库或托盘。
 
 ## 修改与生成
 
@@ -31,9 +31,11 @@ node scripts/companion/build.mjs
 ## 素材来源
 
 - Clawd 动画来自 [rullerzhou-afk/clawd-on-desk](https://github.com/rullerzhou-afk/clawd-on-desk/tree/main/assets/svg)，对应所选 GIF 的原始可编辑 SVG。下载日期与上游 Git blob 记录在 [assets/SOURCES.json](assets/SOURCES.json)。
-- 上游根 `LICENSE` 是 GNU Affero General Public License v3，原文随附于 [assets/CLAWD-LICENSE.txt](assets/CLAWD-LICENSE.txt)。本目录保留原动画源文件、修改代码及来源；正式构建也嵌入来源清单和许可全文。
+- 动画作者：鹿鹿（[@rullerzhou-afk](https://github.com/rullerzhou-afk)）。[经作者于 2026-10-25 同意](https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885)，用于 ToRouter 的非商业使用、改编及随项目分发，不包含商业用途授权。上游源码的 AGPL 不覆盖这些素材，素材也不适用 ToRouter 自有代码的 MIT 许可。
+- [assets/CLAWD-LICENSE.txt](assets/CLAWD-LICENSE.txt) 保留上游独立 `assets/LICENSE`（All Rights Reserved）原文；固定提交、来源与 SHA256 在来源清单中。[assets/CLAWD-PERMISSION.md](assets/CLAWD-PERMISSION.md) 记录此次非商业许可范围。正式构建与独立预览均保留许可、署名及许可范围。
+- Clawd 角色权利归 Anthropic；本次同意仅涉及作者有权授权的动画，不代表 Anthropic 的官方授权或背书，也不涉及蓝鲸等第三方素材。
 - 蓝鲸由用户提供；用户说明其为“网络流传二创图，原型为 DeepSeek 官方图标”。二创作者、具体原始发布链接及再分发授权仍未知，不能据此声称已获授权或官方背书。
 
 本批范围与实际验收记录见 [T070](../../docs/archive/tasks/2026-10-06-companion-animation.md)。
 
-统一声明见 [THIRD_PARTY_NOTICES](../../THIRD_PARTY_NOTICES.md)。`python scripts/check-third-party.py` 从已安装的锁定依赖和固定来源文本生成 `/third-party/notices.html`，`--check` 离线检查漂移。Clawd 的原始 SVG、许可、场景模板和生成脚本随声明页提供；这份素材源快照不能代替组合程序所需的全部对应源代码。本项目尚未选择整体许可证，也尚未确定公开对应源代码的提供方式。
+统一声明见 [THIRD_PARTY_NOTICES](../../THIRD_PARTY_NOTICES.md)。`python scripts/check-third-party.py` 从已安装的锁定依赖和固定来源文本生成 `/third-party/notices.html`，`--check` 离线检查漂移。Clawd 的原始 SVG、素材许可、专项许可说明、场景模板和生成脚本随声明页提供；`node scripts/companion/build.mjs` 同步独立预览与 `/companion/` 下的素材说明。ToRouter 自有代码采用 MIT，素材保持上述独立条款。

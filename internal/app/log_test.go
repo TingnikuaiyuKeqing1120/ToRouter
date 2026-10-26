@@ -4,10 +4,59 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"testing"
+	"time"
 
 	"torouter/internal/store"
 )
+
+func TestLoggerConcurrentRedaction(t *testing.T) {
+	dir := t.TempDir()
+	st, err := store.Open(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer st.Close()
+	const secret = "synthetic-exact-match-only-credential"
+	if err := st.SaveChannel(&store.Channel{Name: "fixture", Protocol: "openai", BaseURL: "http://localhost:1", APIKey: secret, Models: []string{"fixture-model"}}); err != nil {
+		t.Fatal(err)
+	}
+	logger, err := NewLogger(dir, st)
+	if err != nil {
+		t.Fatal(err)
+	}
+	const workers, entries, rounds = 8, 10, 2
+	for range rounds {
+		logger.mu.Lock()
+		logger.lastScan = time.Time{}
+		logger.mu.Unlock()
+		start := make(chan struct{})
+		var writers sync.WaitGroup
+		for range workers {
+			writers.Add(1)
+			go func() {
+				defer writers.Done()
+				<-start
+				for range entries {
+					logger.Event("fixture "+secret, "detail", "upstream echoed "+secret)
+				}
+			}()
+		}
+		close(start)
+		writers.Wait()
+	}
+	data, err := os.ReadFile(LogPath(dir))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if strings.Contains(string(data), secret) {
+		t.Fatal("concurrent log write exposed the synthetic credential")
+	}
+	if strings.Count(string(data), "\n") != workers*entries*rounds || strings.Count(string(data), "[REDACTED]") != 2*workers*entries*rounds {
+		t.Fatal("concurrent entries were lost or not fully redacted")
+	}
+}
 
 func TestLoggerRedactsSecrets(t *testing.T) {
 	dir := t.TempDir()

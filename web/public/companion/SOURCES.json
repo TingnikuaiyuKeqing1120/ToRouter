@@ -1,7 +1,7 @@
 {
   "retrieved": "2026-10-06",
   "repository": "https://github.com/rullerzhou-afk/clawd-on-desk",
-  "license": "CLAWD-LICENSE.txt (upstream GNU AGPL v3)",
+  "license": "All Rights Reserved (upstream assets/LICENSE); project-specific non-commercial permission in CLAWD-PERMISSION.md",
   "files": [
     {
       "file": "clawd-sleeping.svg",
@@ -34,6 +34,14 @@
       "git_blob": "df3c8b939477b1130f0e7164debbab0a63a2246e"
     }
   ],
+  "license_source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/464aa948641afa64cb097c3f92612fbfd2a5634e/assets/LICENSE",
+  "license_revision": "464aa948641afa64cb097c3f92612fbfd2a5634e",
+  "license_sha256": "9b718644846eb2c2098eec0c12f8f8cf78ab89b9dec11d7e3987b18f0d280482",
+  "permission_source": "https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885",
+  "license_retrieved": "2026-10-26",
+  "author": "鹿鹿 (@rullerzhou-afk)",
+  "permission_file": "CLAWD-PERMISSION.md",
+  "permission_date": "2026-10-25",
   "adaptations": "Scoped SVG identifiers/CSS, scene composition and timing overrides; geometry preserved from approved companion prototype.",
   "reproducible_source": "scripts/companion/index.template.html, assets/ and build.mjs in this repository",
   "whale": {

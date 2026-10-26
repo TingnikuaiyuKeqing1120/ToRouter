@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { AlertTriangle, Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, KeyRound, Power, RefreshCw, RotateCcw, Save, Shuffle, Terminal, Upload } from 'lucide-react';
+import { AlertTriangle, Archive, Check, Copy, Download, ExternalLink, Eye, EyeOff, KeyRound, Languages, Power, RefreshCw, RotateCcw, Save, Shuffle, Terminal, Upload } from 'lucide-react';
 import { api, errorMessage, type Settings as SettingsData } from '../api';
 import { useResource } from '../hooks';
 import { useUnsavedChanges } from '../hooks/useUnsavedChanges';
@@ -7,6 +7,7 @@ import { ModelDefaultsEditor } from '../components/ModelDefaultsEditor';
 import { AppUpdatePanel } from '../components/AppUpdates';
 import { restartConsole } from '../restart';
 import { Button, ErrorBox, Field, Input, Loading, Modal, useToast } from '../components/ui';
+import { useI18n } from '../i18n';
 import './Settings.css';
 
 interface FullConfigSummary {
@@ -21,6 +22,7 @@ interface FullConfigSummary {
 
 const normalize = (value: SettingsData): SettingsData => ({ ...value, failure_cooldown_seconds: value.failure_cooldown_seconds ?? 10, quota_refresh_seconds: value.quota_refresh_seconds ?? 300, reasoning_policy: value.reasoning_policy ?? 'preserve' });
 export default function Settings() {
+  const { t, locale, setLocale } = useI18n();
   const resource = useResource<SettingsData>('/settings');
   const runtime = useResource<{ port: number; origin: string }>('/runtime/port');
   const [form, setForm] = useState<SettingsData | null>(null);
@@ -50,12 +52,16 @@ export default function Settings() {
   const [exportError, setExportError] = useState('');
   const [restoreFileText, setRestoreFileText] = useState('');
   const [restoreFileName, setRestoreFileName] = useState('');
+  const [restoreFileReading, setRestoreFileReading] = useState(false);
+  const restoreFileGeneration = useRef(0);
+  const restoreRevision = useRef(0);
+  const previewGeneration = useRef(0);
   const [restorePassword, setRestorePassword] = useState('');
   const [showRestorePassword, setShowRestorePassword] = useState(false);
   const [previewBusy, setPreviewBusy] = useState(false);
   const [previewError, setPreviewError] = useState('');
   const [previewSummary, setPreviewSummary] = useState<FullConfigSummary | null>(null);
-  const [restoreConfirm, setRestoreConfirm] = useState(false);
+  const [restoreConfirm, setRestoreConfirm] = useState<number | null>(null);
   const [restoreBusy, setRestoreBusy] = useState(false);
   const [restoreProgress, setRestoreProgress] = useState('');
   const [restoreError, setRestoreError] = useState('');
@@ -72,6 +78,14 @@ export default function Settings() {
   const dirty = !!form && !!savedSettings && JSON.stringify(form) !== JSON.stringify(savedSettings);
   const portDirty = savedPort !== null && Number(portDraft) !== savedPort;
   const locked = busy || portBusy || exitSaving || controlBusy || preparingControl || exportBusy || previewBusy || restoreBusy || rollbackBusy;
+  const restoreReady = !restoreFileReading && !!restoreFileText && restorePassword.length >= 12;
+
+  useEffect(() => () => {
+    // File reads and preview requests may settle after this page has gone away.
+    ++restoreFileGeneration.current;
+    ++previewGeneration.current;
+    ++restoreRevision.current;
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -223,24 +237,49 @@ export default function Settings() {
     }
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setRestoreFileName(file.name);
+  function invalidateRestoreInput() {
+    ++restoreRevision.current;
+    ++previewGeneration.current;
     setPreviewSummary(null);
     setPreviewError('');
+    setPreviewBusy(false);
+    setRestoreConfirm(null);
+    setRestoreError('');
+    setRestoreProgress('');
+  }
+
+  function handleRestorePasswordChange(value: string) {
+    invalidateRestoreInput();
+    setRestorePassword(value);
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const generation = ++restoreFileGeneration.current;
+    invalidateRestoreInput();
+    setRestoreFileText('');
+    const file = e.target.files?.[0];
+    setRestoreFileName(file?.name ?? '');
+    setRestoreFileReading(!!file);
+    if (!file) return;
     const reader = new FileReader();
     reader.onload = () => {
+      if (generation !== restoreFileGeneration.current) return;
       setRestoreFileText(String(reader.result || ''));
+      setRestoreFileReading(false);
     };
-    reader.onerror = () => {
+    const readFailed = () => {
+      if (generation !== restoreFileGeneration.current) return;
+      setRestoreFileText('');
+      setRestoreFileReading(false);
       setPreviewError('读取文件失败，请重新选择。');
     };
-    reader.readAsText(file);
+    reader.onerror = readFailed;
+    try { reader.readAsText(file); }
+    catch { readFailed(); }
   }
 
   async function handlePreview() {
-    if (!restoreFileText) {
+    if (restoreFileReading || !restoreFileText) {
       setPreviewError('请先选择备份文件。');
       return;
     }
@@ -248,6 +287,7 @@ export default function Settings() {
       setPreviewError('请输入至少 12 个字符的备份口令。');
       return;
     }
+    const generation = ++previewGeneration.current;
     setPreviewBusy(true);
     setPreviewError('');
     try {
@@ -255,16 +295,16 @@ export default function Settings() {
         method: 'POST',
         body: JSON.stringify({ file: restoreFileText, password: restorePassword }),
       });
-      setPreviewSummary(res.summary);
+      if (generation === previewGeneration.current) setPreviewSummary(res.summary);
     } catch (e) {
-      setPreviewError(errorMessage(e));
+      if (generation === previewGeneration.current) setPreviewError(errorMessage(e));
     } finally {
-      setPreviewBusy(false);
+      if (generation === previewGeneration.current) setPreviewBusy(false);
     }
   }
 
   async function handleRestore() {
-    if (operation.current) return;
+    if (operation.current || !restoreReady || restoreConfirm === null || restoreConfirm !== restoreRevision.current) return;
     operation.current = true;
     setRestoreBusy(true);
     setRestoreError('');
@@ -323,127 +363,139 @@ export default function Settings() {
     }
   }
   const saveDisabled = locked || (!dirty && !portDirty) || !form;
-  const settingsStatus = dirty ? '运行与登录设置有未保存更改' : '运行与登录设置已保存';
+  const settingsStatus = dirty ? t('settings.dirty') : t('settings.saved');
   const portStatus = savedPort === null ? '端口尚未读取' : portDirty ? '端口有未保存更改' : portSaved !== null ? '端口已保存，等待重启生效' : '端口无未保存更改';
   const noticesURL = `${(window.__TO_ROUTER_DESKTOP__?.origin ?? window.location.origin).replace(/\/$/, '')}/third-party/notices.html`;
   return <div className="system-settings">
-    <header className="settings-page-heading"><div><h1>系统设置</h1><p>运行策略、管理员登录与服务端口</p></div><Button type="submit" form="settings-form" disabled={saveDisabled}><Save size={16} />{busy || exitSaving ? '正在保存…' : '保存设置'}</Button></header>
+    <header className="settings-page-heading"><div><h1>{t('settings.title')}</h1><p>{t('settings.subtitle')}</p></div><Button type="submit" form="settings-form" disabled={saveDisabled}><Save size={16} />{busy || exitSaving ? t('common.saving') : t('settings.saveSettings')}</Button></header>
     <AppUpdatePanel />
-    <p className="settings-save-scope">保存设置会依次保存有改动的端口和运行／登录设置。</p>
+    <section className="panel settings-section settings-preferences"><div className="section-intro"><div className="section-icon"><Languages size={19} /></div><div><h2>{t('settings.preferencesTitle')}</h2><p>{t('settings.preferencesDesc')}</p></div></div><div className="settings-body">
+      <div className="settings-reasoning">
+        <div>
+          <p id="locale-switch-label" className="font-medium text-sm">{t('settings.interfaceLanguage')}</p>
+          <p className="settings-note">{t('settings.interfaceLanguageHint')}</p>
+        </div>
+        <div className="settings-policy-switch" role="group" aria-labelledby="locale-switch-label">
+          <button type="button" aria-pressed={locale === 'zh'} onClick={() => setLocale('zh')}>{t('settings.langZh')}</button>
+          <button type="button" aria-pressed={locale === 'en'} onClick={() => setLocale('en')}>{t('settings.langEn')}</button>
+        </div>
+      </div>
+    </div></section>
+    <p className="settings-save-scope">{t('settings.saveScope')}</p>
     {resource.error && <ErrorBox message={`读取运行与登录设置失败：${resource.error}`} retry={resource.reload} />}
     {!form && resource.loading ? <Loading /> : form && <form id="settings-form" onSubmit={saveAll} className="settings-form">
       {error && <ErrorBox message={error} />}
       <fieldset disabled={busy || portBusy || exitSaving || controlBusy} className="settings-fields">
-        <section className="panel settings-section"><div className="section-intro"><div className="section-icon"><Terminal size={19} /></div><div><h2>运行策略</h2><p>请求尝试、日志和额度刷新</p></div></div><div className="settings-body">
+        <section className="panel settings-section"><div className="section-intro"><div className="section-icon"><Terminal size={19} /></div><div><h2>{t('settings.runtimeTitle')}</h2><p>{t('settings.runtimeDesc')}</p></div></div><div className="settings-body">
           <div className="settings-runtime-grid">
-            <Field label="日志保留天数" hint="超过期限的历史记录将被清理。"><div className="relative"><Input type="number" required min={1} step={1} value={form.retention_days} onChange={e => update('retention_days', Number(e.target.value))} /><span className="input-unit">天</span></div></Field>
-            <Field label="最大尝试次数" hint="单次请求可尝试的渠道上限，含首次。"><div className="relative"><Input type="number" required min={1} step={1} value={form.max_attempts} onChange={e => update('max_attempts', Number(e.target.value))} /><span className="input-unit">次</span></div></Field>
-            <Field label="单渠道尝试次数" hint="含首次；范围 1..10 次。"><div className="relative"><Input type="number" required min={1} max={10} step={1} value={form.retries_per_channel} onChange={e => update('retries_per_channel', Number(e.target.value))} /><span className="input-unit">次</span></div></Field>
-            <Field label="失败冷却时间" hint="默认 10 秒；范围 1..300 秒。"><div className="relative"><Input type="number" required min={1} max={300} step={1} value={form.failure_cooldown_seconds} onChange={e => update('failure_cooldown_seconds', Number(e.target.value))} /><span className="input-unit">秒</span></div></Field>
-            <Field label="额度刷新周期" hint="0 为仅手动；自动刷新 30..86400 秒。"><div className="relative"><Input aria-label="额度刷新周期" type="number" required min={0} max={86400} step={1} value={form.quota_refresh_seconds ?? 300} onChange={e => update('quota_refresh_seconds', Number(e.target.value))} /><span className="input-unit">秒</span></div></Field>
-            <Field label="授权时自动打开浏览器" hint="关闭后可复制授权链接到浏览器登录。"><input type="checkbox" className="checkbox" checked={form.oauth_auto_open !== false} onChange={e => update('oauth_auto_open', e.target.checked)} /></Field>
+            <Field label={t('settings.logRetentionDays')} hint={t('settings.logRetentionHint')}><div className="relative"><Input type="number" required min={1} step={1} value={form.retention_days} onChange={e => update('retention_days', Number(e.target.value))} /><span className="input-unit">天</span></div></Field>
+            <Field label={t('settings.maxAttempts')} hint={t('settings.maxAttemptsHint')}><div className="relative"><Input type="number" required min={1} step={1} value={form.max_attempts} onChange={e => update('max_attempts', Number(e.target.value))} /><span className="input-unit">次</span></div></Field>
+            <Field label={t('settings.retriesPerChannel')} hint={t('settings.retriesPerChannelHint')}><div className="relative"><Input type="number" required min={1} max={10} step={1} value={form.retries_per_channel} onChange={e => update('retries_per_channel', Number(e.target.value))} /><span className="input-unit">次</span></div></Field>
+            <Field label={t('settings.failureCooldown')} hint={t('settings.failureCooldownHint')}><div className="relative"><Input type="number" required min={1} max={300} step={1} value={form.failure_cooldown_seconds} onChange={e => update('failure_cooldown_seconds', Number(e.target.value))} /><span className="input-unit">秒</span></div></Field>
+            <Field label={t('settings.quotaRefresh')} hint={t('settings.quotaRefreshHint')}><div className="relative"><Input aria-label="额度刷新周期" type="number" required min={0} max={86400} step={1} value={form.quota_refresh_seconds ?? 300} onChange={e => update('quota_refresh_seconds', Number(e.target.value))} /><span className="input-unit">秒</span></div></Field>
+            <Field label={t('settings.oauthAutoOpen')} hint={t('settings.oauthAutoOpenHint')}><input type="checkbox" className="checkbox" checked={form.oauth_auto_open !== false} onChange={e => update('oauth_auto_open', e.target.checked)} /></Field>
           </div>
-          <details className="settings-details"><summary>重试与刷新规则</summary><div>
-            <p>同渠道内重试不另占渠道次数；状态归属、禁用回退等规则可能进一步限制可尝试渠道。</p>
-            <p>仅对 429/503、连接拒绝和 DNS 失败等确认可安全重试的错误重试，耗尽后才按路由规则换渠道。</p>
-            <p>读超时、连接复位、408、500/502/504 可能已执行，不自动重发；上游已成功应答后也不重发。</p>
-            <p>失败冷却每次翻倍，上限 5 分钟；上游有效等待提示优先。额度在页面或路由选择需要时按需刷新，默认周期 300 秒。</p>
+          <details className="settings-details"><summary>{t('settings.rulesSummary')}</summary><div>
+            <p>{t('settings.rulesSummaryP1')}</p>
+            <p>{t('settings.rulesSummaryP2')}</p>
+            <p>{t('settings.rulesSummaryP3')}</p>
+            <p>{t('settings.rulesSummaryP4')}</p>
           </div></details>
         </div></section>
-        <section ref={conversionSection} id="settings-conversion" tabIndex={-1} aria-label="协议转换" className="panel settings-section settings-conversion"><div className="section-intro"><div className="section-icon"><Shuffle size={19} /></div><div><h2>协议转换</h2><p>思考状态与续接</p></div></div><div className="settings-body">
-          <div className="settings-reasoning"><p id="reasoning-policy-label">思考状态处理</p><div className="settings-policy-switch" role="group" aria-labelledby="reasoning-policy-label">{([['preserve', '稳定优先'], ['availability', '可用优先']] as const).map(([value, label]) => <button key={value} type="button" aria-pressed={form.reasoning_policy === value} onClick={() => update('reasoning_policy', value)}>{label}</button>)}</div></div>
-          <p className="settings-note">默认尽量保留思考状态。明确因思考不兼容被拒绝时，可用优先允许剥离对应思考状态重试一次；无法表达时也可按此策略处理。正文和工具历史保持完整。</p>
-          <p className="settings-note">可能影响思考连续性和缓存收益；保存后仅对后续请求生效。</p>
+        <section ref={conversionSection} id="settings-conversion" tabIndex={-1} aria-label="协议转换" className="panel settings-section settings-conversion"><div className="section-intro"><div className="section-icon"><Shuffle size={19} /></div><div><h2>{t('settings.conversionTitle')}</h2><p>{t('settings.conversionDesc')}</p></div></div><div className="settings-body">
+          <div className="settings-reasoning"><p id="reasoning-policy-label">{t('settings.reasoningLabel')}</p><div className="settings-policy-switch" role="group" aria-labelledby="reasoning-policy-label">{([['preserve', t('settings.reasoningPreserve')], ['availability', t('settings.reasoningAvailability')]] as const).map(([value, label]) => <button key={value} type="button" aria-pressed={form.reasoning_policy === value} onClick={() => update('reasoning_policy', value)}>{label}</button>)}</div></div>
+          <p className="settings-note">{t('settings.reasoningNote1')}</p>
+          <p className="settings-note">{t('settings.reasoningNote2')}</p>
         </div></section>
-        <section className="panel settings-section"><div className="section-intro"><div className="section-icon"><KeyRound size={19} /></div><div><h2>管理员登录</h2><p>控制台管理凭证</p></div></div><div className="settings-body">
-          <Field label="管理员登录密钥" hint="更改并保存后，所有管理员会话立即失效，需使用新密钥重新登录。客户端 API Key 不受影响。"><div className="settings-key"><Input type={showKey ? 'text' : 'password'} autoComplete="new-password" value={form.gateway_key} required className="min-w-0 flex-1 font-mono" onChange={e => update('gateway_key', e.target.value)} /><Button type="button" variant="secondary" aria-label={showKey ? '隐藏密钥' : '显示密钥'} onClick={() => setShowKey(!showKey)}>{showKey ? <EyeOff size={16} /> : <Eye size={16} />}</Button><Button type="button" variant="secondary" aria-label="复制密钥" onClick={copy}>{copied ? <Check size={16} /> : <Copy size={16} />}</Button></div></Field>
+        <section className="panel settings-section"><div className="section-intro"><div className="section-icon"><KeyRound size={19} /></div><div><h2>{t('settings.adminLoginTitle')}</h2><p>{t('settings.adminLoginDesc')}</p></div></div><div className="settings-body">
+          <Field label={t('settings.gatewayKey')} hint={t('settings.gatewayKeyHint')}><div className="settings-key"><Input type={showKey ? 'text' : 'password'} autoComplete="new-password" value={form.gateway_key} required className="min-w-0 flex-1 font-mono" onChange={e => update('gateway_key', e.target.value)} /><Button type="button" variant="secondary" aria-label={showKey ? t('settings.hideKey') : t('settings.showKey')} onClick={() => setShowKey(!showKey)}>{showKey ? <EyeOff size={16} /> : <Eye size={16} />}</Button><Button type="button" variant="secondary" aria-label={t('settings.copyKey')} onClick={copy}>{copied ? <Check size={16} /> : <Copy size={16} />}</Button></div></Field>
         </div></section>
-        <section className="panel settings-section"><div className="section-intro"><div className="section-icon"><Terminal size={19} /></div><div><h2>全局请求兜底</h2><p>仅补充客户端未提供的参数</p></div></div><div className="settings-body">
-          <label className="settings-default-toggle"><input aria-label="启用请求兜底参数" className="checkbox" type="checkbox" checked={form.request_defaults_enabled === true} onChange={event => update('request_defaults_enabled', event.target.checked)} />启用请求兜底参数<span>{form.request_defaults_enabled === true ? '已开启' : '默认关闭'}</span></label>
-          <p className="settings-note">客户端明确提供的值始终优先；具体模型规格在<a href="#/model-specs">参数配置</a>中管理。</p>
-          <details className="settings-details" open={form.request_defaults_enabled === true || undefined}><summary>编辑全局缺省值</summary><div><p>关闭时不注入输出预算、温度或思考值；只有具体上游模型支持时才补充，已填写的值会保留。</p><ModelDefaultsEditor value={form.request_defaults || {}} onChange={value => update('request_defaults', value)} /></div></details>
+        <section className="panel settings-section"><div className="section-intro"><div className="section-icon"><Terminal size={19} /></div><div><h2>{t('settings.defaultsTitle')}</h2><p>{t('settings.defaultsDesc')}</p></div></div><div className="settings-body">
+          <label className="settings-default-toggle"><input aria-label={t('settings.defaultsToggle')} className="checkbox" type="checkbox" checked={form.request_defaults_enabled === true} onChange={event => update('request_defaults_enabled', event.target.checked)} />{t('settings.defaultsToggle')}<span>{form.request_defaults_enabled === true ? t('settings.defaultsEnabled') : t('settings.defaultsDefaultOff')}</span></label>
+          <p className="settings-note">{t('settings.defaultsNote')}</p>
+          <details className="settings-details" open={form.request_defaults_enabled === true || undefined}><summary>{t('settings.defaultsEdit')}</summary><div><p>{t('settings.defaultsEditDesc')}</p><ModelDefaultsEditor value={form.request_defaults || {}} onChange={value => update('request_defaults', value)} /></div></details>
         </div></section>
       </fieldset>
-      <div className="settings-save-bar"><p role="status">{settingsStatus} · {portStatus}</p><Button type="submit" disabled={saveDisabled}><Save size={16} />{busy || exitSaving ? '正在保存…' : '保存设置'}</Button></div>
+      <div className="settings-save-bar"><p role="status">{settingsStatus} · {portStatus}</p><Button type="submit" disabled={saveDisabled}><Save size={16} />{busy || exitSaving ? t('common.saving') : t('settings.saveSettings')}</Button></div>
     </form>}
-    <section className="panel settings-section settings-backup"><div className="section-intro"><div className="section-icon"><Archive size={19} /></div><div><h2>配置备份与恢复</h2><p>完整系统配置的加密导出与恢复</p></div></div><div className="settings-body">
+    <section className="panel settings-section settings-backup"><div className="section-intro"><div className="section-icon"><Archive size={19} /></div><div><h2>{t('settings.backupTitle')}</h2><p>{t('settings.backupDesc')}</p></div></div><div className="settings-body">
       <div className="settings-backup-grid">
         <div className="settings-backup-card">
-          <h3>导出全部配置</h3>
-          <p>将当前渠道、凭证、模型、价格、规则与客户端 Key 导出为加密文件。管理员登录密钥与历史账单不包含在备份中。</p>
+          <h3>{t('settings.exportCardTitle')}</h3>
+          <p>{t('settings.exportCardDesc')}</p>
           {exportError && <ErrorBox message={exportError} />}
-          <Field label="备份加密口令" hint="口令须为 12..256 字符，用于加密备份文件。"><div className="settings-key"><Input aria-label="备份加密口令" type={showExportPassword ? 'text' : 'password'} value={exportPassword} placeholder="至少 12 个字符" onChange={e => setExportPassword(e.target.value)} /><Button type="button" variant="secondary" aria-label={showExportPassword ? '隐藏导出密码' : '显示导出密码'} onClick={() => setShowExportPassword(!showExportPassword)}>{showExportPassword ? <EyeOff size={16} /> : <Eye size={16} />}</Button></div></Field>
+          <Field label={t('settings.exportPassword')} hint={t('settings.exportPasswordHint')}><div className="settings-key"><Input aria-label="备份加密口令" type={showExportPassword ? 'text' : 'password'} value={exportPassword} placeholder="至少 12 个字符" onChange={e => setExportPassword(e.target.value)} /><Button type="button" variant="secondary" aria-label={showExportPassword ? '隐藏导出密码' : '显示导出密码'} onClick={() => setShowExportPassword(!showExportPassword)}>{showExportPassword ? <EyeOff size={16} /> : <Eye size={16} />}</Button></div></Field>
           <div className="settings-backup-actions">
-            <Button type="button" variant="secondary" disabled={locked || exportBusy || exportPassword.length < 12} onClick={() => void handleExport()}><Download size={16} />{exportBusy ? '正在导出…' : '导出全部配置'}</Button>
+            <Button type="button" variant="secondary" disabled={locked || exportBusy || exportPassword.length < 12} onClick={() => void handleExport()}><Download size={16} />{exportBusy ? t('common.saving') : t('settings.exportButton')}</Button>
           </div>
         </div>
         <div className="settings-backup-card">
-          <h3>从备份恢复</h3>
-          <p>上传已导出的备份文件并输入口令。可先预览配置概况，确认后覆盖恢复并自动重启服务。</p>
+          <h3>{t('settings.restoreCardTitle')}</h3>
+          <p>{t('settings.restoreCardDesc')}</p>
           {previewError && <ErrorBox message={previewError} />}
-          <Field label="备份文件" hint={restoreFileName ? `已选文件：${restoreFileName}` : '请选择 .json 格式的备份文件'}><Input aria-label="选择备份文件" type="file" accept=".json,application/json" onChange={handleFileChange} /></Field>
-          <Field label="解密口令" hint="输入导出时设置的口令。"><div className="settings-key"><Input aria-label="解密口令" type={showRestorePassword ? 'text' : 'password'} value={restorePassword} placeholder="输入备份口令" onChange={e => setRestorePassword(e.target.value)} /><Button type="button" variant="secondary" aria-label={showRestorePassword ? '隐藏解密密码' : '显示解密密码'} onClick={() => setShowRestorePassword(!showRestorePassword)}>{showRestorePassword ? <EyeOff size={16} /> : <Eye size={16} />}</Button></div></Field>
+          <Field label={t('settings.restoreFile')} hint={restoreFileName ? `${t('settings.restoreFileSelected')}：${restoreFileName}` : t('settings.restoreFileHint')}><Input aria-label="选择备份文件" type="file" accept=".json,application/json" disabled={restoreBusy} onChange={handleFileChange} /></Field>
+          <Field label={t('settings.restorePassword')} hint={t('settings.restorePasswordHint')}><div className="settings-key"><Input aria-label="解密口令" type={showRestorePassword ? 'text' : 'password'} value={restorePassword} placeholder="输入备份口令" disabled={restoreBusy} onChange={e => handleRestorePasswordChange(e.target.value)} /><Button type="button" variant="secondary" aria-label={showRestorePassword ? '隐藏解密密码' : '显示解密密码'} onClick={() => setShowRestorePassword(!showRestorePassword)}>{showRestorePassword ? <EyeOff size={16} /> : <Eye size={16} />}</Button></div></Field>
           {previewSummary && <div className="settings-backup-summary" role="status" aria-label="备份概况">
-            <strong>备份概况（版本 {previewSummary.version}）</strong>
+            <strong>{t('settings.previewSummaryTitle', { version: previewSummary.version })}</strong>
             <ul>
-              <li>渠道：{previewSummary.channels_count} 个</li>
-              <li>模型：{previewSummary.downstream_models_count} 个</li>
-              <li>客户端 Key：{previewSummary.client_keys_count} 个</li>
-              <li>套餐价格：{previewSummary.plan_prices_count} 个</li>
-              <li>标签：{previewSummary.tags_count} 个</li>
-              <li>导出时间：{new Date(previewSummary.exported_at).toLocaleString()}</li>
+              <li>{t('settings.previewChannels', { count: previewSummary.channels_count })}</li>
+              <li>{t('settings.previewModels', { count: previewSummary.downstream_models_count })}</li>
+              <li>{t('settings.previewKeys', { count: previewSummary.client_keys_count })}</li>
+              <li>{t('settings.previewPrices', { count: previewSummary.plan_prices_count })}</li>
+              <li>{t('settings.previewTags', { count: previewSummary.tags_count })}</li>
+              <li>{t('settings.previewExportTime', { time: new Date(previewSummary.exported_at).toLocaleString(locale === 'zh' ? 'zh-CN' : 'en-US') })}</li>
             </ul>
           </div>}
           <div className="settings-backup-actions">
-            <Button type="button" variant="secondary" disabled={locked || previewBusy || !restoreFileText || restorePassword.length < 12} onClick={() => void handlePreview()}><Eye size={16} />{previewBusy ? '正在解析…' : '预览配置'}</Button>
-            <Button type="button" variant="primary" disabled={locked || !restoreFileText || restorePassword.length < 12} onClick={() => setRestoreConfirm(true)}><Upload size={16} />从备份恢复</Button>
+            <Button type="button" variant="secondary" disabled={locked || !restoreReady} onClick={() => void handlePreview()}><Eye size={16} />{previewBusy ? t('settings.parsing') : t('settings.previewButton')}</Button>
+            <Button type="button" variant="primary" disabled={locked || !restoreReady} onClick={() => { if (restoreReady) setRestoreConfirm(restoreRevision.current); }}><Upload size={16} />{t('settings.restoreButton')}</Button>
           </div>
         </div>
         {rollbackSnapshot && <div className="settings-backup-card settings-rollback-card">
-          <h3>回退到恢复前快照</h3>
-          <p>系统在上次恢复前自动生成了安全快照。如果恢复后的新配置不符合预期，可随时回退。</p>
+          <h3>{t('settings.rollbackCardTitle')}</h3>
+          <p>{t('settings.rollbackCardDesc')}</p>
           {rollbackError && <ErrorBox message={rollbackError} />}
           <div className="settings-note" role="status">
-            <span>最近快照：</span><code className="font-mono text-xs">{rollbackSnapshot}</code>
+            <span>{t('settings.latestSnapshot')}</span><code className="font-mono text-xs">{rollbackSnapshot}</code>
           </div>
           <div className="settings-backup-actions">
             <Button type="button" variant="danger" disabled={locked || rollbackBusy} onClick={() => setRollbackConfirm(true)}>
-              <RotateCcw size={16} />{rollbackBusy ? '正在回退…' : '回退到此快照'}
+              <RotateCcw size={16} />{rollbackBusy ? t('settings.rollingBack') : t('settings.rollbackButton')}
             </Button>
           </div>
         </div>}
       </div>
     </div></section>
-    <section className="panel settings-section settings-service"><div className="section-intro"><div className="section-icon"><Power size={19} /></div><div><h2>服务控制</h2><p>监听端口与重启、退出</p></div></div><div className="settings-body">
+    <section className="panel settings-section settings-service"><div className="section-intro"><div className="section-icon"><Power size={19} /></div><div><h2>{t('settings.serviceTitle')}</h2><p>{t('settings.serviceDesc')}</p></div></div><div className="settings-body">
       {runtime.error && <ErrorBox message={`读取监听端口失败：${runtime.error}`} retry={runtime.reload} />}
       {portError && <ErrorBox message={portError} />}
-      <Field label="监听端口" hint={runtime.data?.origin ? `当前实际地址 ${runtime.data.origin}` : savedPort === null ? '尚未取得当前端口，请等待或重试读取。' : '修改后需重启生效。'}><div className="settings-port"><Input aria-label="监听端口" disabled={locked || savedPort === null} type="number" min={1} max={65535} step={1} value={portDraft} onChange={e => setPortDraft(e.target.value)} /><Button type="button" variant="secondary" disabled={locked || !portDirty || savedPort === null} onClick={() => void savePort()}>{portBusy ? '保存中…' : '保存端口'}</Button></div></Field>
-      <p className="settings-note" role="status">{portSaved !== null ? `已保存端口 ${portSaved}，重启后生效。` : '端口改动只在保存并重启后生效。'}{portDirty && <strong> 当前输入尚未保存。</strong>}</p>
-      <details className="settings-details"><summary>端口生效与服务操作说明</summary><div>
-        <p>端口优先级：启动参数 -port ＞ 保存的端口 ＞ 默认 17878；手动启动时，启动参数指定的端口会覆盖保存值。控制台重启使用最新保存端口，未配置则沿用当前实际端口。若端口被占用，启动会失败。</p>
-        <p>重启和退出都会先停止接收新请求，等待在途请求结束（超时则取消），再关闭数据库；重启还会检查新进程就绪，失败原因写入 to-router.log。</p>
+      <Field label={t('settings.portLabel')} hint={runtime.data?.origin ? t('settings.portHintActual', { origin: runtime.data.origin }) : savedPort === null ? t('settings.portHintWaiting') : t('settings.portHintRestartRequired')}><div className="settings-port"><Input aria-label="监听端口" disabled={locked || savedPort === null} type="number" min={1} max={65535} step={1} value={portDraft} onChange={e => setPortDraft(e.target.value)} /><Button type="button" variant="secondary" disabled={locked || !portDirty || savedPort === null} onClick={() => void savePort()}>{portBusy ? t('settings.savingPort') : t('settings.savePort')}</Button></div></Field>
+      <p className="settings-note" role="status">{portSaved !== null ? t('settings.portNoteSaved', { port: portSaved }) : t('settings.portNoteUnsaved')}{portDirty && <strong>{t('settings.portNoteDirty')}</strong>}</p>
+      <details className="settings-details"><summary>{t('settings.portExplanationSummary')}</summary><div>
+        <p>{t('settings.portExplanationP1')}</p>
+        <p>{t('settings.portExplanationP2')}</p>
       </div></details>
       {!confirm && controlError && <ErrorBox message={controlError} />}
-      <div className="settings-controls"><Button type="button" variant="secondary" disabled={locked || savedPort === null || !form} onClick={() => void requestControl('restart')}><RefreshCw size={16} />重启服务</Button><Button type="button" variant="secondary" disabled={locked || !form} onClick={() => void requestControl('shutdown')}><Power size={16} />退出服务</Button></div>
+      <div className="settings-controls"><Button type="button" variant="secondary" disabled={locked || savedPort === null || !form} onClick={() => void requestControl('restart')}><RefreshCw size={16} />{t('settings.restartService')}</Button><Button type="button" variant="secondary" disabled={locked || !form} onClick={() => void requestControl('shutdown')}><Power size={16} />{t('settings.shutdownService')}</Button></div>
     </div></section>
-    {confirm && <Modal title={confirm === 'restart' ? '重启服务？' : '退出服务？'} description={confirm === 'restart' ? `将使用已保存端口 ${controlPort} 重启。服务会等待在途请求结束，再启动新进程；若启动失败，请查看 to-router.log。` : '服务会等待在途请求结束后退出；随后本页面无法访问，需要重新启动 to-router。'} onClose={() => setConfirm(null)} busy={controlBusy}>
+    {confirm && <Modal title={confirm === 'restart' ? t('settings.restartModalTitle') : t('settings.shutdownModalTitle')} description={confirm === 'restart' ? t('settings.restartModalDesc', { port: controlPort ?? '' }) : t('settings.shutdownModalDesc')} onClose={() => setConfirm(null)} busy={controlBusy}>
       {controlProgress && <p role="status" className="settings-note">{controlProgress}</p>}{controlError && <ErrorBox message={controlError} />}
-      <div className="modal-footer"><Button type="button" variant="secondary" disabled={controlBusy} onClick={() => setConfirm(null)}>取消</Button><Button type="button" variant={confirm === 'shutdown' ? 'danger' : 'primary'} disabled={controlBusy} onClick={() => void runControl(confirm)}><AlertTriangle size={16} />{controlBusy ? '处理中…' : confirm === 'restart' ? '确认重启' : '确认退出'}</Button></div>
+      <div className="modal-footer"><Button type="button" variant="secondary" disabled={controlBusy} onClick={() => setConfirm(null)}>{t('common.cancel')}</Button><Button type="button" variant={confirm === 'shutdown' ? 'danger' : 'primary'} disabled={controlBusy} onClick={() => void runControl(confirm)}><AlertTriangle size={16} />{controlBusy ? t('settings.processing') : confirm === 'restart' ? t('settings.confirmRestart') : t('settings.confirmShutdown')}</Button></div>
     </Modal>}
-    {restoreConfirm && <Modal title="确认恢复配置？" description="恢复将覆盖当前的渠道、模型、计费与客户端 Key 配置。管理员登录密钥、MCP 管理授权与历史用量日志保持不变。恢复完成后服务将自动重启以应用新配置。" onClose={() => !restoreBusy && setRestoreConfirm(false)} busy={restoreBusy}>
+    {restoreConfirm !== null && <Modal title={t('settings.restoreModalTitle')} description={t('settings.restoreModalDesc')} onClose={() => !restoreBusy && setRestoreConfirm(null)} busy={restoreBusy}>
       {restoreProgress && <p role="status" className="settings-note">{restoreProgress}</p>}
       {restoreError && <ErrorBox message={restoreError} />}
       <div className="modal-footer">
-        <Button type="button" variant="secondary" disabled={restoreBusy} onClick={() => setRestoreConfirm(false)}>取消</Button>
-        <Button type="button" variant="danger" disabled={restoreBusy} onClick={() => void handleRestore()}><AlertTriangle size={16} />{restoreBusy ? '处理中…' : '确认恢复并重启'}</Button>
+        <Button type="button" variant="secondary" disabled={restoreBusy} onClick={() => setRestoreConfirm(null)}>{t('common.cancel')}</Button>
+        <Button type="button" variant="danger" disabled={restoreBusy || !restoreReady || restoreConfirm !== restoreRevision.current} onClick={() => void handleRestore()}><AlertTriangle size={16} />{restoreBusy ? t('settings.processing') : t('settings.confirmRestore')}</Button>
       </div>
     </Modal>}
-    {rollbackConfirm && <Modal title="确认回退到恢复前快照？" description={`将使用快照 ${rollbackSnapshot} 恢复配置。恢复后服务将自动重启以生效。`} onClose={() => !rollbackBusy && setRollbackConfirm(false)} busy={rollbackBusy}>
+    {rollbackConfirm && <Modal title={t('settings.rollbackModalTitle')} description={t('settings.rollbackModalDesc', { snapshot: rollbackSnapshot ?? '' })} onClose={() => !rollbackBusy && setRollbackConfirm(false)} busy={rollbackBusy}>
       {rollbackProgress && <p role="status" className="settings-note">{rollbackProgress}</p>}
       {rollbackError && <ErrorBox message={rollbackError} />}
       <div className="modal-footer">
-        <Button type="button" variant="secondary" disabled={rollbackBusy} onClick={() => setRollbackConfirm(false)}>取消</Button>
-        <Button type="button" variant="danger" disabled={rollbackBusy} onClick={() => void handleRollback()}><AlertTriangle size={16} />{rollbackBusy ? '处理中…' : '确认回退并重启'}</Button>
+        <Button type="button" variant="secondary" disabled={rollbackBusy} onClick={() => setRollbackConfirm(false)}>{t('common.cancel')}</Button>
+        <Button type="button" variant="danger" disabled={rollbackBusy} onClick={() => void handleRollback()}><AlertTriangle size={16} />{rollbackBusy ? t('settings.processing') : t('settings.confirmRollback')}</Button>
       </div>
     </Modal>}
     <footer className="settings-legal"><a href={noticesURL} target="_blank" rel="noopener noreferrer" onClick={event => {
@@ -454,6 +506,6 @@ export default function Settings() {
         window.runtime.BrowserOpenURL(noticesURL);
         setNoticeError('');
       } catch { setNoticeError('暂时无法打开浏览器，请稍后重试。'); }
-    }}>第三方声明与许可证<ExternalLink size={14} /></a>{noticeError && <span role="alert">{noticeError}</span>}</footer>
+    }}>{t('settings.thirdPartyNotices')}<ExternalLink size={14} /></a>{noticeError && <span role="alert">{noticeError}</span>}</footer>
   </div>;
 }

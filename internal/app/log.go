@@ -114,11 +114,12 @@ func (l *Logger) write(level, name string, fields ...any) {
 	if l == nil {
 		return
 	}
+	secrets := l.gather()
 	var line strings.Builder
-	line.WriteString(level + " " + time.Now().Format("2006-01-02 15:04:05.000") + " " + console.Redact(name, l.gather()...))
+	line.WriteString(level + " " + time.Now().Format("2006-01-02 15:04:05.000") + " " + console.Redact(name, secrets...))
 	for i := 0; i+1 < len(fields); i += 2 {
 		key := strings.TrimSpace(console.Redact(fmt.Sprint(fields[i])))
-		line.WriteString(" " + key + "=" + quote(console.Redact(fmt.Sprint(fields[i+1]), l.gather()...)))
+		line.WriteString(" " + key + "=" + quote(console.Redact(fmt.Sprint(fields[i+1]), secrets...)))
 	}
 	line.WriteString("\n")
 
@@ -147,38 +148,42 @@ func quote(value string) string {
 }
 
 // gather collects credential-shaped values to mask, refreshed at most once a
-// second.
+// second. Each returned snapshot is immutable so writers can redact outside the
+// mutex without observing a partially rebuilt list.
 func (l *Logger) gather() []string {
+	l.mu.Lock()
+	defer l.mu.Unlock()
 	if time.Since(l.lastScan) < time.Second {
 		return l.cached
 	}
-	l.lastScan = time.Now()
-	l.cached = nil
+	var secrets []string
 	if l.store == nil {
-		return l.cached
+		l.cached, l.lastScan = secrets, time.Now()
+		return secrets
 	}
 	if settings, err := l.store.GetSettings(); err == nil && settings.GatewayKey != "" {
-		l.cached = append(l.cached, settings.GatewayKey)
+		secrets = append(secrets, settings.GatewayKey)
 	}
 	if channels, err := l.store.ListChannels(); err == nil {
 		for _, c := range channels {
 			if c.APIKey != "" {
-				l.cached = append(l.cached, c.APIKey)
+				secrets = append(secrets, c.APIKey)
 			}
 			// An OAuth channel carries two: the long-lived GitHub token and the
 			// short-lived bearer. Both must be masked wherever an upstream
 			// error, a request echo or a diagnostic happens to carry them.
 			if c.OAuth != nil {
 				if c.OAuth.GitHubToken != "" {
-					l.cached = append(l.cached, c.OAuth.GitHubToken)
+					secrets = append(secrets, c.OAuth.GitHubToken)
 				}
 				if c.OAuth.AccessToken != "" {
-					l.cached = append(l.cached, c.OAuth.AccessToken)
+					secrets = append(secrets, c.OAuth.AccessToken)
 				}
 			}
 		}
 	}
-	return l.cached
+	l.cached, l.lastScan = secrets, time.Now()
+	return secrets
 }
 
 // Close exists so callers never have to nil-check the logger; the file is

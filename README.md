@@ -21,7 +21,7 @@
     <a href="#兼容客户端与生态">兼容生态</a> •
     <a href="#快速开始">快速开始</a> •
     <a href="#核心场景">核心场景</a> •
-    <a href="#常见问题与排查">常见问题</a> •
+    <a href="#详细入口与排查指南">常见问题</a> •
     <a href="#从源码构建">开发者构建</a> •
     <a href="#开源许可与致谢">许可与致谢</a>
   </p>
@@ -29,7 +29,7 @@
 
 ---
 
-ToRouter 是一个专为个人开发者与 AI 高频使用者设计的本地模型路由网关。**单可执行文件，开箱即用，无需配置复杂的 Python/Node/Docker 外部环境**。支持把你的各类 API Key、平台订阅、第三方反代聚合在一起，统一封装为标准端点，无缝供给 Claude Code、Codex、Cherry Studio、NextChat、Cursor、Dify 等各类 AI 客户端使用。详细设计与使用介绍见 [微信公众平台](https://mp.weixin.qq.com/s/132EB3zPoC5hPedB36HTvg)。
+ToRouter 是一个专为个人开发者与 AI 高频使用者设计的本地模型路由网关。**单可执行文件，基础网关无需配置 Python/Node/Docker 环境**。支持把各类 API Key、平台订阅、第三方反代聚合为标准端点，供支持相应协议的客户端使用；具体客户端配置和跨格式限制见下方“兼容客户端与生态”。详细设计与使用介绍见 [微信公众平台](https://mp.weixin.qq.com/s/132EB3zPoC5hPedB36HTvg)。
 
 ![ToRouter 产品总览](docs/assets/readme/hero-overview.png)
 
@@ -61,7 +61,7 @@ ToRouter 是一个专为个人开发者与 AI 高频使用者设计的本地模�
 * 🏷️ **多维标签组与 Client Key 策略治理**：内置 `billing`（计费模式：free/plan/payg）与 `privacy`（数据隐私：zdr/log_no_train/train）等正交标签组。在生成客户端 API Key 时可指定硬性策略——例如：**隐私开发项目仅放行 `privacy:zdr`（零数据保留）渠道；后台批处理仅放行 `billing:free` 纯免费渠道**。
 
 ### 二：便捷好用的模型路由
-* 🔄 **同渠道多协议自适应与无损互转**：统一支持 OpenAI Chat Completions、Responses、Anthropic Messages、Google Gemini generateContent 四大主流格式。支持在同一渠道混合配置不同协议端点，在严格子集内无损双向互转。
+* 🔄 **同渠道多协议与严格子集转换**：支持 OpenAI Chat Completions、Responses、Anthropic Messages、Google Gemini generateContent 四种格式及同渠道多端点。跨格式支持已定义的文本、普通函数工具与流式子集；不能表达的字段明确拒绝，允许的降级记录转换损失，不承诺完整 API 无损等价。
 * 🛡️ **单一公开模型与智能透明故障转移**：对外暴露一个稳定的模型名称（如 `my-deepseek🐋`），后端可挂载多个渠道构成的优先级链路。
   >主力渠道遇到 5xx、限流或超时等故障时，网关在安全重试策略下自动降级至备选渠道；故障恢复后自动回正，客户端配置永远无需改动。同时，也可以无感升级（如对外暴露kimi-big，从k3升至k3.1pro时，仅需网关内部调整即可，客户端无感。）
 * 📊 **双重定价模型与本地透明用量账本**：同时计算“渠道实际消费成本”与“对应官方 API 标准等价值”，支持多币种换算、阶梯定价与缓存节省统计，看清每一笔调用的真实性价比。
@@ -81,7 +81,7 @@ ToRouter 是一个专为个人开发者与 AI 高频使用者设计的本地模�
 
 ## 兼容客户端与生态
 
-ToRouter 遵循严格的开放模型协议标准，无需私有 SDK，可作为各类 AI 开发工具与桌面客户端的统一驱动中心：
+ToRouter 提供四种模型协议端点。下表列出可按协议配置的工具示例，不代表所有工具、版本、登录方式和组合已完成实际兼容验收；同格式接入和跨格式转换也有不同边界。
 
 | 客户端类别 | 典型兼容工具 | 接入说明与场景 |
 |---|---|---|
@@ -89,6 +89,16 @@ ToRouter 遵循严格的开放模型协议标准，无需私有 SDK，可作为�
 | **桌面客户端与工作台** | **Cherry Studio**、**Chatbox**、**NextChat**、**LibreChat**、**LobeChat** | 填入 `http://127.0.0.1:17878/v1` 及 Client Key，一键拉取所有虚拟公开模型 |
 | **应用编排与工作流** | **Dify**、**FastGPT**、**LangChain**、**LlamaIndex** | 自动故障重试与降级，保障长流程自动化不因单个上游 5xx / 限流而中断 |
 | **原生生态协同** | **MMA（Manage My Agent，规划中）** | 原生与 ToRouter 深度集成，提供更加轻快高效的 Agent 配置与生态管理 |
+
+按客户端要求选择地址，以下均以默认端口为例；修改端口后使用控制台显示的实际地址：
+
+| 客户端协议／配置项 | 地址与配置 |
+|---|---|
+| OpenAI 兼容客户端的 Base URL（Chat／Responses） | `http://127.0.0.1:17878/v1`，填写 Client Key 与公开模型 ID |
+| Claude Code 的 `ANTHROPIC_BASE_URL` | `http://127.0.0.1:17878`，使用网关根地址；客户端自行追加 `/v1/messages`，不要再附加 `/v1`。`ANTHROPIC_AUTH_TOKEN` 填 Client Key，模型选公开模型 ID |
+| Gemini 原生客户端 | 网关提供 `/v1beta/models/{model}:generateContent` 及流式端点；按目标客户端的实际配置格式设置，不套用 OpenAI 的 Base URL 模板 |
+
+**Claude Code 的已知限制**：默认客户端请求跨格式转到 Chat／Responses／Gemini 时，`thinking`、`metadata` 等尚未映射字段仍可能被明确拒绝；现有真实 CLI 试跑未通过该组合的文本／工具兼容验收。选同格式 Messages 上游可以避免跨格式转换，但仍需核对上游是否接受客户端实际参数；模型测试成功不等于完整工具、多轮或所有厂商已验过。
 
 ---
 
@@ -100,11 +110,11 @@ ToRouter 遵循严格的开放模型协议标准，无需私有 SDK，可作为�
 2. **启动网关**：双击运行 `ToRouter.exe`。程序会常驻系统托盘，并自动在浏览器中打开 Web 管理控制台（默认地址：`http://127.0.0.1:17878`）。
 3. **添加上游渠道**：在「上游接入」中添加你的供应商凭证（OpenAI、Anthropic、Gemini、DeepSeek 或兼容反代服务），勾选测试可用的模型。
 4. **配置公开模型**：在「公开模型」中创建一个对外模型名称（例如 `default-reasoning`），并将其绑定到刚刚添加的上游模型；如有需要，可添加备用渠道作为第二优先级回退路线。
-5. **客户端接入调用**：在「客户端接入」中生成一个客户端 API Key，按页面给出的指引，将客户端（如 Claude Code / NextChat）的 Base URL 填为：
+5. **客户端接入调用**：在「客户端接入」中生成一个客户端 API Key。OpenAI 兼容客户端的 Base URL 填为：
    ```text
    http://127.0.0.1:17878/v1
    ```
-   填入生成的 Key 与模型名，即可发起一次完整调用。
+   填入生成的 Key 与模型名发起调用。Claude Code 则使用根地址 `http://127.0.0.1:17878`，具体配置与已知限制见上表。
 
 ---
 
@@ -170,15 +180,16 @@ flowchart LR
 
 ---
 
-### 5. 填入客户端直接使用（全生态开箱即用）
+### 5. 填入客户端并验证调用
 > **目标**：在任意标准 AI 客户端或自动化 Agent 中配置调用，观测实时吞吐与账本明细。
 
 ![用量概览与双口径价值分析](docs/assets/readme/scene-usage-ledger.png)
 
-1. **填入标准端点**：在你的客户端（Cherry Studio、NextChat、Claude Code、Cursor 等）中，将 API 端点填为本地网关地址：
+1. **按客户端协议填入端点**：OpenAI 兼容客户端的 Base URL 使用：
    ```text
    http://127.0.0.1:17878/v1
    ```
+   Claude Code 的 `ANTHROPIC_BASE_URL` 使用根地址 `http://127.0.0.1:17878`；其他客户端按上方协议表与当前版本的配置要求设置。
 2. **发起调用与实时观测**：
    - 填入第 4 步生成的 Client Key 与第 2 步创建的公开模型 ID，立即发起一次完整调用。
    - 请求流经时，桌面小宠（Clawd / 蓝鲸）将实时展示流式吞吐速率（Tokens/s），并在控制坞中随时查看常用账号额度。
@@ -274,5 +285,5 @@ ToRouter 自有代码采用 [MIT License](LICENSE) 授权开源。
 第三方依赖组件及相应法律文本详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ### 特别致谢与素材声明
-* **Clawd 桌面伴侣形象**：基于开源项目 [clawd-on-desk](https://github.com/magpie-community/clawd-on-desk) 素材二创制作，素材保留其原始 [AGPL-3.0 许可证](scripts/companion/README.md) 及来源署名。
+* **Clawd 桌面伴侣动画**：素材来自 [clawd-on-desk](https://github.com/rullerzhou-afk/clawd-on-desk)，动画作者：鹿鹿（[@rullerzhou-afk](https://github.com/rullerzhou-afk)）。[经作者同意](https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885)，用于 ToRouter 的非商业使用、改编及随项目分发；不包含商业用途授权。保留[素材许可原文](scripts/companion/assets/CLAWD-LICENSE.txt)与[专项许可说明](scripts/companion/assets/CLAWD-PERMISSION.md)，素材不适用源码的 AGPL 或本项目自有代码的 MIT 许可。Clawd 角色权利归 Anthropic，此同意仅涉及作者有权授权的动画，不代表 Anthropic 的官方授权或背书，也不涉及蓝鲸等第三方素材。
 * **蓝鲸桌面伴侣形象**：为网络二创作品，原型设计灵感源自 DeepSeek 官方图标。本项目为个人非商业工具，如相关权利人有任何版权疑问或授权要求，请通过项目 Issues 与我们联系。

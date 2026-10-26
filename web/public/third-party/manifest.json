@@ -2530,10 +2530,18 @@
         {
           "file": "CLAWD-LICENSE.txt",
           "path": "licenses/7bde7062f1ee4bbe/CLAWD-LICENSE.txt",
-          "sha256": "8d56b405468aad11f87ab5763f901e276e08d9646ff5c8481b1762b6b789e9ed"
+          "sha256": "9b718644846eb2c2098eec0c12f8f8cf78ab89b9dec11d7e3987b18f0d280482"
+        },
+        {
+          "file": "CLAWD-PERMISSION.md",
+          "path": "licenses/7bde7062f1ee4bbe/CLAWD-PERMISSION.md",
+          "sha256": "3bc1b8dafc400b272a4e1e23ff283b3163eedd7d2aa3ed67c93550ad3186d85e"
         }
       ],
-      "license": "AGPL-3.0 (upstream root LICENSE)",
+      "license": "All Rights Reserved (upstream assets/LICENSE); project-specific non-commercial permission in CLAWD-PERMISSION.md",
+      "author": "鹿鹿 (@rullerzhou-afk)",
+      "license_source": "https://github.com/rullerzhou-afk/clawd-on-desk/blob/464aa948641afa64cb097c3f92612fbfd2a5634e/assets/LICENSE",
+      "permission_source": "https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885",
       "originals": [
         {
           "file": "clawd-sleeping.svg",
@@ -2573,7 +2581,7 @@
         }
       ],
       "modifications": "2026-10-06 onward: SVG/CSS identifier scoping, scene composition, timing overrides; see supplied template/build script.",
-      "scope": "Embedded SVG animation code/artwork; not merely a design reference."
+      "scope": "Animations by 鹿鹿 (@rullerzhou-afk), from clawd-on-desk. Author-approved non-commercial use, adaptation and distribution with ToRouter only; no commercial permission. Artwork is excluded from the upstream AGPL and ToRouter MIT source-code licenses. Clawd character rights belong to Anthropic; permission covers only author-controlled animations, not official Anthropic authorization/endorsement or blue-whale/other third-party rights."
     }
   ],
   "go_build_list": [
@@ -6356,12 +6364,12 @@
     "web/package.json": "44b9e6a73a65783b9863e4d0fa2d01206408aa1bca98658bfd39e1a1619e71db",
     "web/package-lock.json": "f33418ade02f79f8ca35649010a34dd54ac0072a110b37d4ab3c9825ac909d6d",
     "third_party/references.json": "4f8a5db4e88c56dddcabd95c461e14cc87c09904ef9dd5c81a75b5aed466b64a",
-    "scripts/check-third-party.py": "6b61e30f614626bbb61a6ab4cc8a7876c74a306a3899a4ea3a2cae73d1970c84",
+    "scripts/check-third-party.py": "125aaa35b2962ebddd2befe4f489e9bdec1499a114f09701c88ab6cc2c53f448",
     "web/src/assets/provider-icons/catalog.json": "9fe22ce2146cef586447300ea4a3140633a96bb90d4d7cd5b17ec23100828495"
   },
   "unresolved": [
     "User-supplied blue-whale SVGs are described by the user as online circulating derivative artwork based on the official DeepSeek logo; derivative author, original URL and redistribution permission remain unknown.",
-    "No project-wide LICENSE selected. Third-party notices do not license to-router or clear AGPL obligations.",
+    "ToRouter original code is MIT-licensed. Clawd artwork is excluded; the project-specific non-commercial permission does not authorize commercial use or clear Anthropic character rights.",
     "Research references are documented; a repository-wide copied-code provenance audit has not been performed.",
     "OS-provided Microsoft WebView2 Runtime is not redistributed by this build; separate redistribution terms must be checked if bundled later."
   ]

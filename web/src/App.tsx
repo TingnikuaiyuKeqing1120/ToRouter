@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Activity, BarChart3, BookOpen, Coins, KeyRound, Layers, LogOut, Moon, Puzzle, ScrollText, Search, Settings as SettingsIcon, Sparkles, Sun, Tag as TagIcon, Unplug, Plug } from 'lucide-react';
+import { useI18n, type TranslationKey } from './i18n';
 import { BrandLogo } from './components/BrandLogo';
 import { api, ApiError, clearLegacyKey, errorMessage } from './api';
 import { ErrorBox, Loading, ToastProvider } from './components/ui';
@@ -33,26 +34,47 @@ const Settings = lazy(() => import('./pages/Settings'));
 const Usage = lazy(() => import('./pages/Usage'));
 const Prices = lazy(() => import('./pages/Prices'));
 
-const pages = [
-  { id: 'usage', label: '用量概览', icon: BarChart3, component: Usage, group: '数据看板' },
-  { id: 'channels', label: '上游接入', icon: Unplug, component: Channels, group: '路由调配' },
-  { id: 'models', label: '公开模型', icon: Layers, component: Models, group: '路由调配' },
-  { id: 'client-access', label: '客户端接入', icon: KeyRound, component: ClientAccess, group: '路由调配' },
-  { id: 'model-specs', label: '参数配置', icon: BookOpen, component: ModelSpecs, group: '模型配置' },
-  { id: 'prices', label: '价格配置', icon: Coins, component: Prices, group: '模型配置' },
-  { id: 'tags', label: '标签配置', icon: TagIcon, component: Tags, group: '模型配置' },
-  { id: 'status', label: '运行状态', icon: Activity, component: Status, group: '运维中枢' },
-  { id: 'mcp', label: 'MCP控制台', icon: Plug, component: MCP, group: '运维中枢' },
-  { id: 'logs', label: '请求日志', icon: ScrollText, component: Logs, group: '运维中枢' },
-  { id: 'catalog', label: '模型数据库', icon: BookOpen, component: Catalog, group: '运维中枢' },
-  { id: 'plugins', label: '插件库', icon: Puzzle, component: Plugins, group: '运维中枢' },
-  { id: 'settings', label: '系统设置', icon: SettingsIcon, component: Settings, group: '运维中枢' },
-  { id: 'companion', label: '桌宠管理', icon: Sparkles, component: CompanionSettings, group: '桌宠' },
+const pageDefinitions = [
+  { id: 'usage', groupKey: 'analytics', icon: BarChart3, component: Usage },
+  { id: 'channels', groupKey: 'routing', icon: Unplug, component: Channels },
+  { id: 'models', groupKey: 'routing', icon: Layers, component: Models },
+  { id: 'client-access', groupKey: 'routing', icon: KeyRound, component: ClientAccess },
+  { id: 'model-specs', groupKey: 'modelConfig', icon: BookOpen, component: ModelSpecs },
+  { id: 'prices', groupKey: 'modelConfig', icon: Coins, component: Prices },
+  { id: 'tags', groupKey: 'modelConfig', icon: TagIcon, component: Tags },
+  { id: 'status', groupKey: 'operations', icon: Activity, component: Status },
+  { id: 'mcp', groupKey: 'operations', icon: Plug, component: MCP },
+  { id: 'logs', groupKey: 'operations', icon: ScrollText, component: Logs },
+  { id: 'catalog', groupKey: 'operations', icon: BookOpen, component: Catalog },
+  { id: 'plugins', groupKey: 'operations', icon: Puzzle, component: Plugins },
+  { id: 'settings', groupKey: 'operations', icon: SettingsIcon, component: Settings },
+  { id: 'companion', groupKey: 'companion', icon: Sparkles, component: CompanionSettings },
 ] as const;
 
-const navPages = pages.filter(item => item.id !== 'companion');
+export type PageId = (typeof pageDefinitions)[number]['id'];
 
 export default function App() {
+  const { t } = useI18n();
+
+  const pages = useMemo(() => {
+    return pageDefinitions.map(def => {
+      const labelKey = def.id === 'client-access'
+        ? 'nav.clientAccess'
+        : def.id === 'model-specs'
+        ? 'nav.modelSpecs'
+        : def.id === 'companion'
+        ? 'nav.companionSettings'
+        : (`nav.${def.id}` as TranslationKey);
+
+      return {
+        ...def,
+        label: t(labelKey),
+        group: t(`nav.${def.groupKey}` as TranslationKey),
+      };
+    });
+  }, [t]);
+
+  const navPages = useMemo(() => pages.filter(item => item.id !== 'companion'), [pages]);
   const [authed, setAuthed] = useState(false);
   const [restoring, setRestoring] = useState(true);
   const [sessionError, setSessionError] = useState('');
@@ -99,9 +121,9 @@ export default function App() {
     const hash = parseHashPath(window.location.hash);
     return hash === 'pet' || hash === 'floating-pet';
   });
-  const [page, setPage] = useState<(typeof pages)[number]['id']>(() => {
+  const [page, setPage] = useState<PageId>(() => {
     const hash = parseHashPath(window.location.hash);
-    return pages.some(p => p.id === hash) ? hash as (typeof pages)[number]['id'] : 'usage';
+    return pageDefinitions.some(p => p.id === hash) ? (hash as PageId) : 'usage';
   });
   const [routeHash, setRouteHash] = useState(() => window.location.hash || `#/${page}`);
   const routeHashRef = useRef(routeHash); routeHashRef.current = routeHash;
@@ -147,15 +169,16 @@ export default function App() {
     finally { navigating.current = false; setLeaving(false); }
   }
 
+  const pageLabel = pages.find(p => p.id === page)?.label;
   useEffect(() => {
     if (isPet) {
       window.location.hash = '#/pet';
       document.title = 'to-router 悬浮桌宠';
     } else {
       window.location.hash = routeHash;
-      document.title = `${pages.find(p => p.id === page)?.label} · to-router 控制台`;
+      document.title = `${pageLabel} · to-router 控制台`;
     }
-  }, [page, isPet, routeHash]);
+  }, [pageLabel, isPet, routeHash]);
 
   useEffect(() => {
     const changed = () => {
@@ -209,7 +232,7 @@ export default function App() {
     finally { setLoggingOut(false); }
   }
 
-  if(lifecycle.state==='stopped')return <div className="login-page"><div className="space-y-4 text-center"><h1 className="text-lg font-semibold">网关已停止</h1><p className="text-sm text-[var(--color-text-muted)]">重新启动 to-router 后即可继续使用。</p><button type="button" className="btn btn-secondary" onClick={()=>{lifecycle.retry();setSessionVersion(value=>value+1);}}>重新检查连接</button></div></div>;
+  if(lifecycle.state==='stopped')return <div className="login-page"><div className="space-y-4 text-center"><h1 className="text-lg font-semibold">{t('nav.gatewayStopped')}</h1><p className="text-sm text-[var(--color-text-muted)]">{t('nav.gatewayStoppedDesc')}</p><button type="button" className="btn btn-secondary" onClick={()=>{lifecycle.retry();setSessionVersion(value=>value+1);}}>{t('nav.recheckConnection')}</button></div></div>;
   if (restoring) return <Loading />;
   if (sessionError) return <div className="login-page"><ErrorBox message={sessionError} retry={() => setSessionVersion(v => v + 1)} /></div>;
   if (!authed) return <ToastProvider><Login onSuccess={() => { setAuthed(true); setLogoutError(''); }} /></ToastProvider>;
@@ -221,7 +244,7 @@ export default function App() {
     );
   }
 
-  const Page = pages.find(p => p.id === page)!.component;
+  const Page = pageDefinitions.find(p => p.id === page)!.component;
 
   return (
     <ToastProvider><ConfirmProvider><RuntimeStatusProvider><AppUpdatesProvider beforeInstall={beforeLeave} onUpdateIntent={lifecycle.expectUpdate}>
@@ -233,25 +256,25 @@ export default function App() {
             </span>
             <div>
               <strong>to-router<AppUpdateArrow /></strong>
-              <span>个人模型中枢</span>
+              <span>{t('nav.brandSubtitle')}</span>
             </div>
           </div>
 
           <div className="sidebar-status" title={`当前网关 (${gatewayAddress})`}>
             <span className="status-dot animate-pulse" />
             <span className="status-text font-mono">{gatewayAddress}</span>
-            <span className="status-badge font-mono">在线</span>
+            <span className="status-badge font-mono">{t('nav.gatewayOnline')}</span>
           </div>
 
           <button
             type="button"
             className="sidebar-search-btn"
             onClick={() => setPaletteOpen(true)}
-            title="快捷命令与导航 (Ctrl + K)"
+            title={t('commandPalette.searchHint')}
           >
             <Search size={14} className="text-[var(--color-text-muted)] shrink-0" />
-            <span>快速命令导航...</span>
-            <kbd className="sidebar-kbd">Ctrl K</kbd>
+            <span>{t('nav.commandPalettePlaceholder')}</span>
+            <kbd className="sidebar-kbd">{t('nav.ctrlK')}</kbd>
           </button>
 
           <nav aria-label="主导航">
@@ -284,16 +307,16 @@ export default function App() {
               onClick={event => { event.preventDefault(); void navigate('companion'); }}
             >
               <Sparkles size={17} />
-              <span>桌面小宠</span>
+              <span>{t('nav.desktopPet')}</span>
             </a>
             <button
               type="button"
               className="nav-item"
-              title={theme === 'dark' ? '切换为浅色模式' : '切换为暗黑模式'}
+              title={theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode')}
               onClick={toggleTheme}
             >
               {theme === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
-              <span>{theme === 'dark' ? '浅色模式' : '暗黑模式'}</span>
+              <span>{theme === 'dark' ? t('nav.lightMode') : t('nav.darkMode')}</span>
             </button>
             <button
               className="nav-item nav-exit"
@@ -301,7 +324,7 @@ export default function App() {
               onClick={logout}
             >
               <LogOut size={17} />
-              <span>退出登录</span>
+              <span>{t('nav.logout')}</span>
             </button>
           </div>
         </aside>
@@ -332,8 +355,8 @@ export default function App() {
                 type="button"
                 className="text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] p-2 transition-colors"
                 onClick={() => setPaletteOpen(true)}
-                title="快速命令导航 (Ctrl + K)"
-                aria-label="快速命令导航"
+                title={t('commandPalette.searchHint')}
+                aria-label={t('commandPalette.searchHint')}
               >
                 <Search size={15} />
               </button>

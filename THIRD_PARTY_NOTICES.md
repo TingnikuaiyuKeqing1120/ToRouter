@@ -1,6 +1,6 @@
 # 第三方声明
 
-to-router 使用第三方运行依赖、参考实现与直接采用的素材；三类关系分别记录，不能由这里的分类推断全仓代码均未复制或许可已全部满足。项目自有代码采用 MIT 许可证（见根 [LICENSE](LICENSE)）；各第三方部分适用其原许可（如 Clawd 素材保留 GNU AGPL v3），本文件不代替各许可的法律效力。
+to-router 使用第三方运行依赖、参考实现与直接采用的素材；三类关系分别记录，不能由这里的分类推断全仓代码均未复制或许可已全部满足。项目自有代码采用 MIT 许可证（见根 [LICENSE](LICENSE)）；各第三方部分适用其相应条款，Clawd 动画另受素材许可与 ToRouter 非商业专项许可约束，不纳入 MIT。本文件不代替各许可及授权原文的法律效力。
 
 完整的许可、版权与 NOTICE 原文、锁定版本和 SHA256 在 [随程序提供的声明页](web/public/third-party/notices.html)及[机器可读清单](web/public/third-party/manifest.json)。运行程序后从设置中的第三方声明入口打开 `/third-party/notices.html`；三个入口共用嵌入的 `web/dist`，无需联网即可读取许可原文。外部来源链接仅在用户点击后联网。
 
@@ -50,17 +50,19 @@ T120 的 OpenCode Zen Free 原生接入参考并改编 Magpie community `opencod
 
 **Devin原生接入（T120 B2）**：独立PKCE、模型目录与私有Connect RPC参考Magpie社区Devin插件`0.1.20 / d34f78b69a303a620307f1202a77e171a13ecf8f`及上述CPA版本；保留[社区仓库MIT许可](third_party/upstream/magpie-plugins-d34f78b6/LICENSE)。Go实现映射为无服务端存储的Responses，不采用源工具登录跟随、CLI执行、提示词改写、虚构工具结果或Token估算；字段依据与改编边界见[Devin来源记录](internal/devin/SOURCE.md)。
 
-**Clawd 动画**来自 [rullerzhou-afk/clawd-on-desk](https://github.com/rullerzhou-afk/clawd-on-desk)。6 个原始 SVG 的 Git blob 记录在 [SOURCES.json](scripts/companion/assets/SOURCES.json)，生成器核对原始 blob。上游根许可为 [GNU AGPL v3](scripts/companion/assets/CLAWD-LICENSE.txt)，完整原文随程序提供；本地原文与本次核对的上游文本仅有末尾空行差异。
+**Clawd 动画**：动画素材来自 [clawd-on-desk](https://github.com/rullerzhou-afk/clawd-on-desk)，动画作者：鹿鹿（[@rullerzhou-afk](https://github.com/rullerzhou-afk)）。[经作者于 2026-10-25 同意](https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885)，用于 ToRouter 的非商业使用、改编及随项目分发，**不包含任何商业用途的授权**。同意仅涉及作者创作并有权授权的动画部分。
 
-这部分实际复制 SVG 动画代码与图形，经 `scripts/companion/build.mjs` 对标识符、CSS 与 keyframes 加前缀，再组合场景和调整节奏，自 2026-10-06 起修改。最终内联进 `web/src/companion/mascot.generated.ts` 并打包；不能仅称为设计借鉴。可编辑的原始 SVG、场景模板及修改生成脚本在仓库 `scripts/companion/`，也随声明页提供[素材源文件快照](web/public/third-party/sources/companion/)。这份快照并非整个组合程序的完整对应源代码；公开源码下载位置和交付方式尚未确定。
+上游源码的 AGPL-3.0 不覆盖动画与美术素材。这里保留独立的 [assets/LICENSE 原文](scripts/companion/assets/CLAWD-LICENSE.txt)（All Rights Reserved）与[ToRouter 专项许可说明](scripts/companion/assets/CLAWD-PERMISSION.md)，并随程序提供。许可原文固定于上游提交 `464aa948641afa64cb097c3f92612fbfd2a5634e`；6 个原始 SVG 的 Git blob、许可来源／SHA256 与作者回复链接记录在 [SOURCES.json](scripts/companion/assets/SOURCES.json)，生成器核对原始 blob 及许可摘要。
+
+这部分实际复制 SVG 动画代码与图形，经 `scripts/companion/build.mjs` 对标识符、CSS 与 keyframes 加前缀，再组合场景和调整节奏，自 2026-10-06 起修改。最终内联进 `web/src/companion/mascot.generated.ts` 并打包；不能仅称为设计借鉴。可编辑的原始 SVG、场景模板及修改生成脚本在仓库 `scripts/companion/`，也随声明页提供[素材源文件快照](web/public/third-party/sources/companion/)。源文件的提供不改变素材的非商业许可范围。
 
 **蓝鲸**由用户提供 `deepsleep.svg`、`deepwork.svg`、`deepwake.svg`。用户说明其为“网络流传二创图，原型为 DeepSeek 官方图标”。当前改编包括裁剪轮廓、简化扫描线转角、提取眼部与尾部连续形变。二创作者、具体原始发布链接及再分发授权仍未知，不声称获得上游许可或官方背书。素材保持现状；公开分发前必须解决授权依据或经用户另行决定处理方式。
 
-## AGPL 与当前发布限制
+## 素材许可范围
 
-按[许可原文](https://www.gnu.org/licenses/agpl-3.0.html)第 2 节，私人运行和不对外传播的修改通常不要求公开源码；第 4–6 节约束对外分发，包括保留许可、版权与修改说明，并按适用条件提供 Corresponding Source。第 13 节对修改版与远程用户通过网络交互另有源码提供要求。第 5 节同时区分独立作品的聚合：不能仅凭同仓库或同一 EXE 就断言整个项目必然受或必然不受 AGPL 约束。
+Clawd 动画不纳入 ToRouter 自有代码的 MIT 许可，不能因源码公开、署名或提供素材源文件而推导商业使用权。保留素材许可原文和作者回复中的非商业范围；如需超出此次许可范围，须另行取得相应权利人的许可。
 
-当前 Clawd 已被改编并内联，需在整体许可、组合边界与对应源代码交付方式明确后判断实际分发义务。补一份许可文本本身不能完成这项判断。提供源码并不要求公开真实密钥、个人数据或旧 Git 历史；构建所需的非秘密代码与配置模板应完整保留。此处未替用户选择整个项目的许可证，也未授权公开发布。
+Clawd 角色本身的权利归 Anthropic；作者对其有权授权的动画所作的同意，不代表 Anthropic 的官方授权或背书，也不涉及蓝鲸等第三方素材的授权。蓝鲸的来源及授权未知状态不因本次 Clawd 许可确认而改变。
 
 ## 维护与校验
 

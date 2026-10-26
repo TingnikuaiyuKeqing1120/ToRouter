@@ -215,6 +215,8 @@ def generate():
 
     assets = ROOT / 'scripts/companion/assets'
     asset_sources = json.loads((assets / 'SOURCES.json').read_text(encoding='utf-8'))
+    if sha((assets / 'CLAWD-LICENSE.txt').read_bytes()) != asset_sources['license_sha256']:
+        raise RuntimeError('Clawd artwork license changed; verify the fixed upstream assets/LICENSE')
     original_files = []
     for file in asset_sources['files']:
         data = (assets / file['file']).read_bytes()
@@ -231,13 +233,20 @@ def generate():
     # Keep the preferred editable inputs next to the build script's expected paths.
     for file in asset_sources['files']:
         outputs['sources/companion/assets/' + file['file']] = (assets / file['file']).read_bytes()
-    outputs['sources/companion/assets/CLAWD-LICENSE.txt'] = (assets / 'CLAWD-LICENSE.txt').read_bytes()
-    outputs['sources/companion/assets/SOURCES.json'] = (assets / 'SOURCES.json').read_bytes()
+    for name in ['CLAWD-LICENSE.txt', 'CLAWD-PERMISSION.md', 'SOURCES.json']:
+        outputs['sources/companion/assets/' + name] = (assets / name).read_bytes()
     component('Clawd SVG animations', 'source Git blobs in SOURCES.json', 'Directly used artwork',
-              asset_sources['repository'], assets, files=[assets / 'CLAWD-LICENSE.txt'],
-              license='AGPL-3.0 (upstream root LICENSE)', originals=original_files,
+              asset_sources['repository'], assets,
+              files=[assets / 'CLAWD-LICENSE.txt', assets / 'CLAWD-PERMISSION.md'],
+              license=asset_sources['license'], author=asset_sources['author'],
+              license_source=asset_sources['license_source'],
+              permission_source=asset_sources['permission_source'], originals=original_files,
               modifications='2026-10-06 onward: SVG/CSS identifier scoping, scene composition, timing overrides; see supplied template/build script.',
-              scope='Embedded SVG animation code/artwork; not merely a design reference.')
+              scope='Animations by 鹿鹿 (@rullerzhou-afk), from clawd-on-desk. '
+                    'Author-approved non-commercial use, adaptation and distribution with ToRouter only; no commercial permission. '
+                    'Artwork is excluded from the upstream AGPL and ToRouter MIT source-code licenses. '
+                    'Clawd character rights belong to Anthropic; permission covers only author-controlled animations, '
+                    'not official Anthropic authorization/endorsement or blue-whale/other third-party rights.')
 
     manifest = {'schema': 1, 'target': 'windows/amd64; production build tag; unified Go entry',
                 'components': components, 'go_build_list': go_inventory,
@@ -248,7 +257,7 @@ def generate():
                             'web/src/assets/provider-icons/catalog.json']},
                 'unresolved': [
                     'User-supplied blue-whale SVGs are described by the user as online circulating derivative artwork based on the official DeepSeek logo; derivative author, original URL and redistribution permission remain unknown.',
-                    'No project-wide LICENSE selected. Third-party notices do not license to-router or clear AGPL obligations.',
+                    'ToRouter original code is MIT-licensed. Clawd artwork is excluded; the project-specific non-commercial permission does not authorize commercial use or clear Anthropic character rights.',
                     'Research references are documented; a repository-wide copied-code provenance audit has not been performed.',
                     'OS-provided Microsoft WebView2 Runtime is not redistributed by this build; separate redistribution terms must be checked if bundled later.'
                 ]}
@@ -272,11 +281,11 @@ def generate():
     outputs['notices.html'] = ('''<!doctype html><html lang="zh-CN"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>第三方声明 · to-router</title>
 <style>body{font:16px/1.6 system-ui,sans-serif;max-width:1000px;margin:2rem auto;padding:0 1rem;color:#172033;background:#fafbfc}a{color:#245ac4}li{margin:1rem 0;overflow-wrap:anywhere}code{font-size:.85em}p{margin:.3rem 0}h2{margin-top:2rem}</style>
-<h1>第三方声明</h1><p>以下保留上游许可、版权与 NOTICE 原文；各组件以各自条款为准，无担保声明见许可原文。本页不替 to-router 选择整体许可证，也不代表发布许可已经齐备。</p>
+<h1>第三方声明</h1><p>以下保留上游许可、版权与 NOTICE 原文；各组件以各自条款为准，无担保声明见许可原文。ToRouter 自有代码采用 MIT；第三方素材不因此适用 MIT，本页不代表所有第三方权利已经取得。</p>
 <p>覆盖 Windows 三入口实际 Go 依赖与前端生产依赖图；图中可能包含经打包器移除的类型包或未采用代码。模块内附带的许可保守保留，不声称每个子组件均已使用。开发／测试依赖完整锁定清单见 <a href="manifest.json">机器可读清单与 SHA256</a>。</p>
-<h2>素材与发布待确认</h2><p>Clawd 动画直接内嵌，来自 clawd-on-desk，许可为 GNU AGPL v3。修改包括命名隔离、场景组合和节奏调整（2026-10-06 起）。可按该许可行使相应权利，许可含无担保条款；<a href="sources/companion/index.template.html" download>修改源模板</a>、<a href="sources/companion/build.mjs" download>生成脚本</a>及原始 SVG 入口见清单。这里提供的素材生成源文件不等于已满足组合程序的全部对应源代码义务。</p>
-<p>蓝鲸来源为用户提供的 deepsleep.svg、deepwork.svg、deepwake.svg；用户说明其为网络流传二创图，原型为 DeepSeek 官方图标。二创作者、具体原始链接与再分发授权仍未知，不声称获得许可或官方背书。项目整体许可证及与 AGPL 的组合／对应源代码提供方式仍待确定；当前声明不能作为公开发布许可证明。</p>
-<p>AGPL 第 2 节允许私人运行及不对外传播的修改；第 4–6 节对分发要求保留许可、版权与修改说明并按要求提供对应源代码，第 13 节另约束修改版的远程网络交互。第 5 节区分独立作品聚合，不能仅凭同仓库或同一 EXE 判断整个项目的许可范围。提供对应源代码不要求公开真实密钥、个人数据或旧 Git 历史。条款以随附许可原文为准。</p>
+<h2>素材许可与权利边界</h2><p>动画素材来自 <a href="https://github.com/rullerzhou-afk/clawd-on-desk">clawd-on-desk</a>，动画作者：鹿鹿（<a href="https://github.com/rullerzhou-afk">@rullerzhou-afk</a>）。<a href="https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885">经作者于 2026-10-25 同意</a>，用于 ToRouter 的非商业使用、改编及随项目分发，不包含商业用途授权。上游源码的 AGPL 不覆盖动画与美术素材；这些素材也不适用 ToRouter 自有代码的 MIT 许可。保留的 <a href="sources/companion/assets/CLAWD-LICENSE.txt">assets/LICENSE 原文</a>及<a href="sources/companion/assets/CLAWD-PERMISSION.md">专项许可说明</a>以原文与作者回复为准。</p>
+<p>Clawd 角色权利归 Anthropic。本次同意仅涉及作者创作并有权授权的动画，不代表 Anthropic 的官方授权或背书，也不涉及蓝鲸等第三方素材。修改包括命名隔离、场景组合和节奏调整（2026-10-06 起）；<a href="sources/companion/index.template.html" download>修改源模板</a>、<a href="sources/companion/build.mjs" download>生成脚本</a>及原始 SVG 入口见清单。</p>
+<p>蓝鲸来源为用户提供的 deepsleep.svg、deepwork.svg、deepwake.svg；用户说明其为网络流传二创图，原型为 DeepSeek 官方图标。二创作者、具体原始链接与再分发授权仍未知，不声称获得许可或官方背书。</p>
 <p>参考实现按已记录研究版本保留许可。本轮未做全仓复制代码溯源审计，不能据此断言所有代码均仅借鉴概念。Microsoft WebView2 系统运行时不随当前包分发，未来捆绑时须另核其条款。</p>
 ''' + ''.join(sections) + '</html>\n').encode()
     return outputs

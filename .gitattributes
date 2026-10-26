@@ -3,6 +3,7 @@
 /third_party/** -text -whitespace
 /web/public/third-party/** -text -whitespace
 /scripts/companion/assets/** -text -whitespace
+/web/public/companion/** -text -whitespace
 # Preserve upstream whitespace; handwritten generators still check whitespace,
 # treating CRLF as a line ending rather than trailing source-code whitespace.
 /scripts/companion/build.mjs -text whitespace=trailing-space,space-before-tab,cr-at-eol

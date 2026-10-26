@@ -38,6 +38,16 @@ if (-not $PublicKey) {
     }
 }
 
+# Reject mismatched keys before compiling or touching any release output. The
+# same public key is injected into the EXE and used to verify the final manifest.
+Push-Location $root
+try {
+    & go run ./scripts/release-manifest -check-key -key $PrivateKeyFile -public-key $PublicKey
+    if ($LASTEXITCODE -ne 0) { throw "Release signing/verification key check failed (exit $LASTEXITCODE)." }
+} finally {
+    Pop-Location
+}
+
 # 3. Resolve output directory
 if (-not $OutputDir) {
     $OutputDir = Join-Path $root ".local/dist/$tag"
@@ -93,6 +103,7 @@ try {
         "-arch", "amd64",
         "-url", $artifactUrl,
         "-key", $PrivateKeyFile,
+        "-public-key", $PublicKey,
         "-output", $manifestPath
     )
     if ($ReleaseNotesFile -and (Test-Path $ReleaseNotesFile)) {

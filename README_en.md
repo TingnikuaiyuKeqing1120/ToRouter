@@ -29,7 +29,7 @@
 
 ---
 
-ToRouter is a local-first AI model routing gateway crafted specifically for individual developers and high-frequency AI practitioners. **Delivered as a single portable executable, it works straight out of the box with zero runtime dependencies (no Python, Node.js, or Docker required)**. It seamlessly aggregates your diverse API keys, platform subscriptions, and reverse proxies into unified, standard endpoints for tools like Claude Code, Codex, Cursor, Cherry Studio, NextChat, Dify, and more. For an in-depth design walkthrough and usage guide, check out our [WeChat Official Account article](https://mp.weixin.qq.com/s/132EB3zPoC5hPedB36HTvg).
+ToRouter is a local-first AI model routing gateway for individual developers and frequent AI users. **The basic gateway runs as a single executable without Python, Node.js, or Docker setup**. It aggregates API keys, platform subscriptions, and reverse proxies into standard endpoints for clients supporting the corresponding protocols. See "Compatible Ecosystem & Clients" below for configuration and conversion limits. For a design walkthrough and usage guide, see our [WeChat Official Account article](https://mp.weixin.qq.com/s/132EB3zPoC5hPedB36HTvg).
 
 ![ToRouter Product Overview](docs/assets/readme/hero-overview.png)
 
@@ -46,7 +46,7 @@ When managing LLMs and AI workflows daily, developers often face an awkward dile
 1. **Built Exclusively for Personal Use**: Stripped of all multi-tenant and commercial overhead. A single lightweight executable, local SQLite storage, 100% of your data kept strictly on your machine, zero external dependencies. Download and run.
 2. **Restrained, Focused UX**: Core paths are clean and immediate, with advanced protocol tweaks progressively disclosed to keep the interface fast, uncluttered, and ergonomic.
 3. **Thorough Decoupling of Routing and Client Management**:
-   * **ToRouter focuses exclusively on being an exceptional model gateway**: Multi-protocol lossless conversion, smart failover and recovery, orthogonal multi-dimensional tag governance, dual-metric valuation ledger, and **native MCP automation**.
+   * **ToRouter focuses on model gateway responsibilities**: Strict protocol conversion, safe failover and recovery, multi-dimensional tags, dual-metric valuation, and **native MCP automation**.
    * **Client configuration belongs to dedicated consumption tools**: Users who don't need complex client configurations are not burdened. In the future, we will offer **MMA** (Manage My Agent) as a lightweight, native companion for fast agent orchestration.
 
 ---
@@ -60,7 +60,7 @@ When managing LLMs and AI workflows daily, developers often face an awkward dile
 * 🏷️ **Multi-Dimensional Tag Governance & Client Key Policies**: Built-in orthogonal tag groups such as `billing` (`free` / `plan` / `payg`) and `privacy` (`zdr` / `log_no_train` / `train`). When generating client API keys, you can enforce rigid policy constraints—e.g.: **Privacy-sensitive codebases route strictly to `privacy:zdr` (Zero Data Retention) providers; background batch jobs route only to `billing:free` zero-cost tiers**.
 
 ### 2. Convenient & Resilient Model Routing
-* 🔄 **Lossless Multi-Protocol Translation Across Providers**: Unified support for OpenAI Chat Completions, Responses, Anthropic Messages, and Google Gemini generateContent. Mix and match different protocol endpoints within the same upstream channel with lossless bi-directional conversion.
+* 🔄 **Multiple Endpoints and Strict Protocol Conversion**: Supports OpenAI Chat Completions, Responses, Anthropic Messages, and Google Gemini generateContent, including multiple endpoints in one channel. Conversion covers the defined text, ordinary function-tool, and streaming subsets. Unsupported fields are rejected and permitted degradation is recorded; complete APIs are not guaranteed to be equivalent.
 * 🛡️ **Single Public Model ID & Transparent Failover**: Expose a single, stable virtual model name (e.g., `my-deepseek🐋`) to downstream clients, backed by a prioritized chain of upstream providers.
   > When the primary channel encounters 5xx server errors, rate limits, or timeouts, the gateway automatically and safely downgrades to secondary providers without interrupting the client. Once the primary recovers, the gateway seamlessly reverts back. You can also upgrade models behind the scenes (e.g., pointing `kimi-big` from `k3` to `k3.1pro`) with zero client-side reconfiguration.
 * 📊 **Dual-Metric Pricing & Transparent Local Ledger**: Computes both "actual provider cost" and "equivalent official benchmark API valuation" simultaneously. Features multi-currency conversion, tiered pricing, and prompt-caching savings analytics, providing complete transparency into the true cost-efficiency of every invocation.
@@ -80,7 +80,7 @@ When managing LLMs and AI workflows daily, developers often face an awkward dile
 
 ## Compatible Ecosystem & Clients
 
-ToRouter adheres strictly to open AI model protocol standards without requiring proprietary client SDKs. It serves as a unified driver hub for various AI developer tools and desktop clients:
+ToRouter exposes four model protocol endpoints. The tools below are examples that can be configured by protocol; inclusion does not mean every tool, version, login method, or combination has passed real-client acceptance. Native protocol access and cross-protocol conversion have different limits.
 
 | Client Category | Typical Tools | Integration & Scenarios |
 |---|---|---|
@@ -88,6 +88,16 @@ ToRouter adheres strictly to open AI model protocol standards without requiring 
 | **Desktop Clients & Workbenches** | **Cherry Studio**, **Chatbox**, **NextChat**, **LibreChat**, **LobeChat** | Point the base URL to `http://127.0.0.1:17878/v1` with your Client Key to pull all virtual public models instantly. |
 | **Workflow & Agent Orchestration** | **Dify**, **FastGPT**, **LangChain**, **LlamaIndex** | Automatic retries and failover keep long-running multi-step automations running smoothly without failing due to upstream 5xx / rate limits. |
 | **Native Ecosystem Synergy** | **MMA (Manage My Agent, planned)** | Natively and deeply integrated with ToRouter, delivering an ultra-lightweight and ergonomic agent configuration and lifecycle management suite. |
+
+Choose the address required by your client. These examples use the default port; after changing it, use the address shown by the console.
+
+| Client protocol / setting | Configuration |
+|---|---|
+| OpenAI-compatible Base URL (Chat / Responses) | `http://127.0.0.1:17878/v1`, with a Client Key and public model ID |
+| Claude Code `ANTHROPIC_BASE_URL` | `http://127.0.0.1:17878`; use the gateway root because the client appends `/v1/messages`. Do not add another `/v1`. Set `ANTHROPIC_AUTH_TOKEN` to the Client Key and select a public model ID |
+| Native Gemini clients | The gateway exposes `/v1beta/models/{model}:generateContent` and its streaming endpoint. Follow the target client's actual configuration format instead of applying the OpenAI Base URL template |
+
+**Known Claude Code limitation:** Default requests converted to Chat, Responses, or Gemini can still be rejected for unmapped fields such as `thinking` and `metadata`; the existing real-CLI text/tool trial did not pass for this combination. A native Messages upstream avoids that conversion, but must still accept the client's actual parameters. A successful model probe does not establish full tool, multi-turn, or provider compatibility.
 
 ---
 
@@ -99,11 +109,11 @@ No external dependencies or database setups needed—ready to use in seconds:
 2. **Launch**: Double-click `ToRouter.exe`. The application docks into your system tray and automatically opens the Web console in your browser (default URL: `http://127.0.0.1:17878`).
 3. **Add Upstream Channels**: Under "Upstream Channels", add your provider credentials (OpenAI, Anthropic, Gemini, DeepSeek, or compatible reverse proxies) and probe for available models.
 4. **Create a Public Model**: Under "Public Models", define a public-facing virtual model ID (e.g., `default-reasoning`) and bind it to your upstream model; attach backup channels as secondary priorities if desired.
-5. **Issue a Client Key**: Under "Client Access", create an API key. Configure your client (e.g., Claude Code, Cursor, or NextChat) with the standard endpoint:
+5. **Issue a Client Key**: Under "Client Access", create an API key. For an OpenAI-compatible client, set the Base URL to:
    ```text
    http://127.0.0.1:17878/v1
    ```
-   Provide the generated key and model ID to start dispatching requests immediately.
+   Provide the generated key and public model ID to make a request. For Claude Code, use the root URL `http://127.0.0.1:17878`; see the configuration table and limitations above.
 
 ---
 
@@ -169,15 +179,16 @@ flowchart LR
 
 ---
 
-### 5. Connect Clients & Consume (Instant Ecosystem Compatibility)
+### 5. Connect Clients & Verify Requests
 > **Goal**: Configure standard AI clients or autonomous agents to start making calls, observing real-time streaming speeds and ledger analytics.
 
 ![Usage Overview and Dual-Metric Analytics](docs/assets/readme/scene-usage-ledger.png)
 
-1. **Configure Standard Endpoint**: In your client (Cherry Studio, NextChat, Claude Code, Cursor, etc.), set the API base URL to:
+1. **Choose the Protocol Endpoint**: For an OpenAI-compatible client, set the Base URL to:
    ```text
    http://127.0.0.1:17878/v1
    ```
+   For Claude Code, set `ANTHROPIC_BASE_URL` to the root `http://127.0.0.1:17878`. For other clients, follow the protocol table and the configuration requirements of their current version.
 2. **Invoke & Observe in Real Time**:
    - Enter your Client Key and public model ID to make a call.
    - While streaming, the floating desktop companion (Clawd / Blue Whale) displays live generation speed (Tokens/s) on your desktop.
@@ -273,5 +284,5 @@ ToRouter's original source code is licensed under the [MIT License](LICENSE).
 Third-party dependencies and their corresponding licenses are detailed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ### Special Acknowledgments & Asset Attribution
-* **Clawd Desktop Companion**: Derived from the open-source project [clawd-on-desk](https://github.com/magpie-community/clawd-on-desk), preserving its original [AGPL-3.0 License](scripts/companion/README.md) and attribution.
+* **Clawd Desktop Companion Animations**: Assets are from [clawd-on-desk](https://github.com/rullerzhou-afk/clawd-on-desk), by 鹿鹿 ([@rullerzhou-afk](https://github.com/rullerzhou-afk)). [The author agreed](https://github.com/rullerzhou-afk/clawd-on-desk/issues/1259#issuecomment-6398719885) to their non-commercial use, adaptation and distribution with ToRouter; no commercial use is authorized. The [artwork license](scripts/companion/assets/CLAWD-LICENSE.txt) and [project-specific permission](scripts/companion/assets/CLAWD-PERMISSION.md) are retained. These assets are excluded from both the upstream AGPL source-code license and ToRouter's MIT license. The Clawd character belongs to Anthropic; this permission covers only animations the author is entitled to authorize, implies no official Anthropic authorization or endorsement, and does not cover the blue whale or other third-party assets.
 * **Blue Whale Desktop Companion**: Community derivative artwork inspired by the official DeepSeek brand logo. ToRouter is a non-commercial personal tool; copyright holders are welcome to contact us via GitHub Issues for any licensing inquiries.
